@@ -1,0 +1,102 @@
+<div>
+  <h2 id="page-heading" data-cy="VendaProdutoHeading">
+    <span>Venda Produtos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-venda-produto"
+        [routerLink]="['/venda-produto/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Venda Produto </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="vendaProdutos?.length === 0">
+    <span>No Venda Produtos found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="vendaProdutos && vendaProdutos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span>ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="qtd">
+            <div class="d-flex">
+              <span>Qtd</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="valorUnitario">
+            <div class="d-flex">
+              <span>Valor Unitario</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="desconto">
+            <div class="d-flex">
+              <span>Desconto</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vendaProduto of vendaProdutos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/venda-produto', vendaProduto.id, 'view']">{{ vendaProduto.id }}</a>
+          </td>
+          <td>{{ vendaProduto.qtd }}</td>
+          <td>{{ vendaProduto.valorUnitario }}</td>
+          <td>{{ vendaProduto.desconto }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/venda-produto', vendaProduto.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/venda-produto', vendaProduto.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(vendaProduto)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

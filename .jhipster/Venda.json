@@ -1,0 +1,25 @@
+{
+  "applications": "*",
+  "changelogDate": "20230420041441",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "venda",
+  "fields": [
+    {
+      "fieldName": "data",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Venda",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}
