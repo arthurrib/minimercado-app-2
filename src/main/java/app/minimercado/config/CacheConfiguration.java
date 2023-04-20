@@ -48,6 +48,11 @@ public class CacheConfiguration {
             createCache(cm, app.minimercado.domain.User.class.getName());
             createCache(cm, app.minimercado.domain.Authority.class.getName());
             createCache(cm, app.minimercado.domain.User.class.getName() + ".authorities");
+            createCache(cm, app.minimercado.domain.Produto.class.getName());
+            createCache(cm, app.minimercado.domain.Conta.class.getName());
+            createCache(cm, app.minimercado.domain.Estoque.class.getName());
+            createCache(cm, app.minimercado.domain.Venda.class.getName());
+            createCache(cm, app.minimercado.domain.VendaProduto.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

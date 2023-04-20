@@ -1,0 +1,41 @@
+
+entity Produto {
+	nome String required,
+    valor BigDecimal,
+    categoria String required
+}
+
+entity Conta {
+	nome String required,
+    telefone String required,
+    equipe String required,
+    status String
+}
+
+entity Estoque {
+	qtd Integer required,
+    valor BigDecimal required
+}
+
+entity Venda {
+	data ZonedDateTime required,
+	status String
+}
+
+entity VendaProduto {
+	qtd Integer required,
+	valorUnitario BigDecimal required,
+    desconto BigDecimal
+}
+
+// Set pagination options
+
+
+// Set pagination options
+paginate Produto, Conta, Estoque, Venda with pagination
+
+// Set service options to all except few
+service all with serviceClass
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

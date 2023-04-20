@@ -1,0 +1,40 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="produto">
+      <h2 data-cy="produtoDetailsHeading"><span>Produto</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ produto.id }}</span>
+        </dd>
+        <dt><span>Nome</span></dt>
+        <dd>
+          <span>{{ produto.nome }}</span>
+        </dd>
+        <dt><span>Valor</span></dt>
+        <dd>
+          <span>{{ produto.valor }}</span>
+        </dd>
+        <dt><span>Categoria</span></dt>
+        <dd>
+          <span>{{ produto.categoria }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/produto', produto.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
