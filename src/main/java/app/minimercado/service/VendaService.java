@@ -58,16 +58,16 @@ public class VendaService {
 
         return vendaRepository
             .findById(venda.getId())
-            .map(existingVenda -> {
-                if (venda.getData() != null) {
-                    existingVenda.setData(venda.getData());
-                }
-                if (venda.getStatus() != null) {
-                    existingVenda.setStatus(venda.getStatus());
-                }
+//            .map(existingVenda -> {
+//                if (venda.getData() != null) {
+//                    existingVenda.setData(venda.getData());
+//                }
+//                if (venda.getStatus() != null) {
+//                    existingVenda.setStatus(venda.getStatus());
+//                }
 
-                return existingVenda;
-            })
+//                return existingVenda;
+//            })
             .map(vendaRepository::save);
     }
 

@@ -1,0 +1,9 @@
+.form-group::ng-deep {
+  input,
+  select,
+  textarea {
+    &.ng-valid.form-control {
+      border-bottom: 1px solid green !important;
+    }
+  }
+}

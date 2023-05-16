@@ -1,0 +1,89 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="arthu (generated)" id="1681968145320-3">
+        <addColumn tableName="venda">
+            <column name="created_by" type="varchar(50)">
+<!--                <constraints nullable="false"/>-->
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-4">
+        <addColumn tableName="venda">
+            <column name="created_date" type="timestamp"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-5">
+        <addColumn tableName="venda">
+            <column name="id_conta" type="int8"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-6">
+        <addColumn tableName="estoque">
+            <column name="id_produto" type="int8"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-7">
+        <addColumn tableName="venda_produto">
+            <column name="id_produto" type="int8">
+<!--                <constraints nullable="false"/>-->
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-8">
+        <addColumn tableName="venda_produto">
+            <column name="id_venda" type="int8">
+<!--                <constraints nullable="false"/>-->
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-9">
+        <addColumn tableName="venda">
+            <column name="last_modified_by" type="varchar(50)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-10">
+        <addColumn tableName="venda">
+            <column name="last_modified_date" type="timestamp"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-11">
+        <addColumn tableName="venda">
+            <column name="observacoes" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-12">
+        <addForeignKeyConstraint baseColumnNames="id_conta" baseTableName="venda"
+                                 constraintName="FKbpkpyu32gajsx09ajr0gps7ho" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="conta"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-13">
+        <addForeignKeyConstraint baseColumnNames="id_produto" baseTableName="estoque"
+                                 constraintName="FKbx8yr35bvoe5dqdd2sxjjjktj" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produto"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-14">
+        <addForeignKeyConstraint baseColumnNames="id_venda" baseTableName="venda_produto"
+                                 constraintName="FKnkpfsn1umbllhm6gqcqnu9o5q" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="venda"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-15">
+        <addForeignKeyConstraint baseColumnNames="id_produto" baseTableName="venda_produto"
+                                 constraintName="FKp0jnynwk8f89iffcv0enc8omc" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="produto"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-16">
+        <dropColumn columnName="data" tableName="venda"/>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-17">
+        <dropColumn columnName="desconto" tableName="venda_produto"/>
+    </changeSet>
+    <changeSet author="arthu (generated)" id="1681968145320-18">
+        <dropColumn columnName="status" tableName="venda"/>
+    </changeSet>
+</databaseChangeLog>

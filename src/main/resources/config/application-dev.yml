@@ -32,9 +32,9 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/minimercadoApp
-    username: minimercadoApp
-    password:
+    url: jdbc:postgresql://localhost:5432/minimercado_app_2
+    username: postgres
+    password: root
     hikari:
       poolName: Hikari
       auto-commit: false

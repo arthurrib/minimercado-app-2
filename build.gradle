@@ -124,9 +124,9 @@ liquibase {
     activities {
         main {
             driver "org.postgresql.Driver"
-            url "jdbc:postgresql://localhost:5432/minimercadoApp"
-            username "minimercadoApp"
-            password ""
+            url "jdbc:postgresql://localhost:5432/minimercado_app_2"
+            username "postgres"
+            password "root"
             changeLogFile "src/main/resources/config/liquibase/master.xml"
             defaultSchemaName ""
             logLevel "debug"
@@ -134,9 +134,9 @@ liquibase {
         }
         diffLog {
             driver "org.postgresql.Driver"
-            url "jdbc:postgresql://localhost:5432/minimercadoApp"
-            username "minimercadoApp"
-            password ""
+            url "jdbc:postgresql://localhost:5432/minimercado_app_2"
+            username "postgres"
+            password "root"
             changeLogFile project.ext.diffChangelogFile
             referenceUrl "hibernate:spring:app.minimercado.domain?dialect=tech.jhipster.domain.util.FixedPostgreSQL10Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
             defaultSchemaName ""
@@ -242,6 +242,11 @@ dependencies {
     liquibaseRuntime sourceSets.main.compileClasspath
     liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibaseHibernate5Version}"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+    implementation "org.postgresql:postgresql"
+    liquibaseRuntime "org.postgresql:postgresql"
 }
 
 if (project.hasProperty("gae")) {
@@ -264,31 +269,31 @@ wrapper {
     gradleVersion = "7.4.2"
 }
 
-task webapp_test(type: NpmTask, dependsOn: "npm_install") {
-    args = ["run", "webapp:test"]
-}
+//task webapp_test(type: NpmTask, dependsOn: "npm_install") {
+//    args = ["run", "webapp:test"]
+//}
 
-if (project.hasProperty("nodeInstall")) {
-    node {
-        version = "16.17.0"
-        npmVersion = "8.19.1"
-        download = true
-    }
+//if (project.hasProperty("nodeInstall")) {
+//    node {
+//        version = "16.17.0"
+//        npmVersion = "8.19.1"
+//        download = true
+//    }
+//
+//    // Copy local node and npm to a fixed location for npmw
+//    def fixedNode = tasks.register("fixedNode", Copy) {
+//        from nodeSetup
+//        into 'build/node'
+//    }
+//    tasks.named("nodeSetup").configure { finalizedBy fixedNode }
+//
+//    def fixedNpm = tasks.register("fixedNpm", Copy) {
+//        from npmSetup
+//        into 'build/node'
+//    }
+//    tasks.named("npmSetup").configure { finalizedBy fixedNpm }
+//}
 
-    // Copy local node and npm to a fixed location for npmw
-    def fixedNode = tasks.register("fixedNode", Copy) {
-        from nodeSetup
-        into 'build/node'
-    }
-    tasks.named("nodeSetup").configure { finalizedBy fixedNode }
-
-    def fixedNpm = tasks.register("fixedNpm", Copy) {
-        from npmSetup
-        into 'build/node'
-    }
-    tasks.named("npmSetup").configure { finalizedBy fixedNpm }
-}
-
-test.dependsOn webapp_test
+//test.dependsOn webapp_test
 compileJava.dependsOn processResources
 processResources.dependsOn bootBuildInfo

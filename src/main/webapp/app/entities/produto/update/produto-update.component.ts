@@ -7,6 +7,7 @@ import { finalize } from 'rxjs/operators';
 import { ProdutoFormService, ProdutoFormGroup } from './produto-form.service';
 import { IProduto } from '../produto.model';
 import { ProdutoService } from '../service/produto.service';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'jhi-produto-update',
@@ -69,5 +70,9 @@ export class ProdutoUpdateComponent implements OnInit {
   protected updateForm(produto: IProduto): void {
     this.produto = produto;
     this.produtoFormService.resetForm(this.editForm, produto);
+  }
+
+  getField(field: string): AbstractControl<any, any> | null{
+    return this.editForm.get(field);
   }
 }

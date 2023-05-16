@@ -64,9 +64,9 @@ public class VendaProdutoService {
                 if (vendaProduto.getValorUnitario() != null) {
                     existingVendaProduto.setValorUnitario(vendaProduto.getValorUnitario());
                 }
-                if (vendaProduto.getDesconto() != null) {
-                    existingVendaProduto.setDesconto(vendaProduto.getDesconto());
-                }
+//                if (vendaProduto.getDesconto() != null) {
+//                    existingVendaProduto.setDesconto(vendaProduto.getDesconto());
+//                }
 
                 return existingVendaProduto;
             })
