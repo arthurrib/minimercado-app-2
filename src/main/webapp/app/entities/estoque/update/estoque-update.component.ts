@@ -1,12 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
+import {finalize} from 'rxjs/operators';
 
-import { EstoqueFormService, EstoqueFormGroup } from './estoque-form.service';
-import { IEstoque } from '../estoque.model';
-import { EstoqueService } from '../service/estoque.service';
+import {EstoqueFormGroup, EstoqueFormService} from './estoque-form.service';
+import {IEstoque} from '../estoque.model';
+import {EstoqueService} from '../service/estoque.service';
+import {AbstractControl} from '@angular/forms';
+import {IProduto} from "../../produto/produto.model";
+import {ProdutoService} from "../../produto/service/produto.service";
+import {ASC, DESC} from "../../../config/navigation.constants";
 
 @Component({
   selector: 'jhi-estoque-update',
@@ -17,20 +21,41 @@ export class EstoqueUpdateComponent implements OnInit {
   estoque: IEstoque | null = null;
 
   editForm: EstoqueFormGroup = this.estoqueFormService.createEstoqueFormGroup();
+  produtos: IProduto[];
+  predicate = 'categoria,nome';
+  ascending = true;
 
   constructor(
     protected estoqueService: EstoqueService,
     protected estoqueFormService: EstoqueFormService,
-    protected activatedRoute: ActivatedRoute
-  ) {}
+    protected activatedRoute: ActivatedRoute,
+    protected produtoService: ProdutoService
+  ) {
+  }
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ estoque }) => {
+    this.activatedRoute.data.subscribe(({estoque}) => {
       this.estoque = estoque;
       if (estoque) {
         this.updateForm(estoque);
       }
     });
+    this.produtoService.query({sort: this.getSortQueryParam(), size: 200}).subscribe(
+      (res: HttpResponse<IProduto[]>) => this.produtos = this.fillComponentAttributesFromResponseBody(res.body)
+    );
+  }
+
+  protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
+    const ascendingQueryParam = ascending ? ASC : DESC;
+    if (predicate === '') {
+      return [];
+    } else {
+      return [predicate + ',' + ascendingQueryParam];
+    }
+  }
+
+  protected fillComponentAttributesFromResponseBody(data: IProduto[] | null): IProduto[] {
+    return data ?? [];
   }
 
   previousState(): void {
@@ -69,5 +94,9 @@ export class EstoqueUpdateComponent implements OnInit {
   protected updateForm(estoque: IEstoque): void {
     this.estoque = estoque;
     this.estoqueFormService.resetForm(this.editForm, estoque);
+  }
+
+  getField(field: string): AbstractControl<any, any> | null {
+    return this.editForm.get(field);
   }
 }

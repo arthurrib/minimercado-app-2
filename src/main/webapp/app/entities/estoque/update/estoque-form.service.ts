@@ -20,6 +20,7 @@ type EstoqueFormGroupContent = {
   id: FormControl<IEstoque['id'] | NewEstoque['id']>;
   qtd: FormControl<IEstoque['qtd']>;
   valor: FormControl<IEstoque['valor']>;
+  produto: FormControl<IEstoque['produto']>;
 };
 
 export type EstoqueFormGroup = FormGroup<EstoqueFormGroupContent>;
@@ -43,6 +44,9 @@ export class EstoqueFormService {
         validators: [Validators.required],
       }),
       valor: new FormControl(estoqueRawValue.valor, {
+        validators: [Validators.required],
+      }),
+      produto: new FormControl(estoqueRawValue.produto, {
         validators: [Validators.required],
       }),
     });

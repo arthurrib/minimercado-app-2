@@ -43,5 +43,4 @@ public class Estoque implements Serializable {
     @JoinColumn(name = "id_produto", referencedColumnName = "id")
     private Produto produto;
 
-
 }
