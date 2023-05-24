@@ -27,85 +27,62 @@
       </div>
 
       <div class="servicos-container">
-          <div class="produtos-selecionados mt-2" *ngFor="let produto of produtosSharedCollection; let in = index">
-            <div class="row">
-              <div class="col-12 form-group">
-                <div>
-                  <label>Descrição do Serviço</label>
-                  <div class="edit-row float-right">
-                    <button class="btn btn-outline-primary" title="Adicionar" (click)="createNew()"><i class="fa fa-plus"></i></button>
-                    <button class="btn btn-outline-info" title="Duplicar" (click)="clone(in)"><i class="fa fa-clone"></i></button>
-                    <button class="btn btn-outline-danger" title="Remover" [disabled]="!podeRemover()" (click)="remove(in)">
-                      <i class="fa fa-remove"></i>
-                    </button>
-                  </div>
-                </div>
-                <app-servico-input-search
-                  inputPlaceholder="Digite aqui..."
-                  (inputTyped)="produto.discriminacao = $event"
-                  (onChange)="loadServico($event, produto)"
-                  (serverResponse)="produtoServerResponse = $event.body"
-                  [newInputTyped]="produto.discriminacao"
-                >
-                </app-servico-input-search>
-                <small *ngIf="!produto.discriminacao" class="ml-1">
-                  <i class="text-danger fa fa-times"></i>
-                  <span class="text-danger">Nenhum Produto Selecionado</span>
-                </small>
-              </div>
-              <div class="col-12 col-md-3">
-                <div class="form-group">
-                  <label>Quantidade *</label>
-                  <input
-                    (ngModelChange)="quantidadeUpdated($event, in)"
-                    [(ngModel)]="produto.quantidade"
-                    required
-                    min="0.1"
-                    class="form-control"
-                    name="qtde{{ in }}"
-                  />
-                  <p *ngIf="!produto.quantidade" class="text-danger"><small>*Campo obrigatório</small></p>
+        <div class="produtos-selecionados mt-2" *ngFor="let produto of vendaProdutos; let in = index">
+          <div class="row">
+            <div class="col-12 form-group">
+              <div>
+                <label>Descrição do Serviço</label>
+                <div class="edit-row float-right">
+                  <button type="button" class="btn btn-outline-primary" title="Adicionar" (click)="createNew()">
+                    <fa-icon icon="plus"></fa-icon>
+                  </button>
+                  <button type="button" class="btn btn-outline-danger" title="Remover" [disabled]="!podeRemover()"
+                          (click)="remove(in)">
+                    <fa-icon icon="remove"></fa-icon>
+                  </button>
                 </div>
               </div>
-              <div class="col-12 col-md-3">
-                <div class="form-group">
-                  <label>Valor Unitário *</label>
-                  <input
-                    (ngModelChange)="valorUnitarioUpdated($event, in)"
-                    [(ngModel)]="produto.valor"
-                    required
-                    min="0.1"
-                    class="form-control"
-                    name="valor{{ in }}"
-                    currencyMask
-                  />
-                  <p *ngIf="!produto.valor" class="text-danger">
-                    <small>*Campo obrigatório. <br />Ex: R$ 10,00</small>
-                  </p>
-                </div>
+
+              <!--              <small *ngIf="!produto.nome" class="ml-1">-->
+              <!--                <i class="text-danger fa fa-times"></i>-->
+              <!--                <span class="text-danger">Nenhum Produto Selecionado</span>-->
+              <!--              </small>-->
+            </div>
+            <div class="col-12 col-md-3">
+              <div class="form-group">
+                <label>Quantidade *</label>
+                <input
+                  (ngModelChange)="quantidadeUpdated($event, in)"
+                  [(ngModel)]="produto.qtd"
+                  [ngModelOptions]="{standalone: true}"
+                  required
+                  min="0.1"
+                  class="form-control"
+                  name="qtde{{ in }}"
+                />
+                <p *ngIf="!produto.qtd" class="text-danger"><small>*Campo obrigatório</small></p>
               </div>
-              <div class="col-12 col-md-3">
-                <div class="form-group">
-                  <label>Desconto *</label>
-                  <input
-                    (ngModelChange)="descontoUpdated($event, in)"
-                    [(ngModel)]="produto.desconto"
-                    required
-                    placeholder="R$ 0,00"
-                    class="form-control"
-                    name="desconto{{ in }}"
-                    currencyMask
-                  />
-                </div>
-              </div>
-              <div class="col-12 col-md-3">
-                <div class="form-group">
-                  <label>Total</label>
-                  <h5>{{ produto.total | currency: 'BRL' }}</h5>
-                </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <div class="form-group">
+                <label>Valor Unitário *</label>
+                <input
+                  (ngModelChange)="valorUnitarioUpdated($event, in)"
+                  [(ngModel)]="produto.valorUnitario"
+                  [ngModelOptions]="{standalone: true}"
+                  required
+                  min="0.1"
+                  class="form-control"
+                  name="valor{{ in }}"
+                  currencyMask
+                />
+                <p *ngIf="!produto.valorUnitario" class="text-danger">
+                  <small>*Campo obrigatório. <br/>Ex: R$ 10,00</small>
+                </p>
               </div>
             </div>
           </div>
+        </div>
       </div>
 
       <div>

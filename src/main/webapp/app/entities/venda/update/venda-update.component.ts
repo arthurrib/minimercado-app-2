@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
+import {finalize, map} from 'rxjs/operators';
 
-import { VendaFormService, VendaFormGroup } from './venda-form.service';
-import { IVenda } from '../venda.model';
-import { VendaService } from '../service/venda.service';
+import {VendaFormGroup, VendaFormService} from './venda-form.service';
+import {IVenda} from '../venda.model';
+import {VendaService} from '../service/venda.service';
 import {IProduto} from "../../produto/produto.model";
 import {IConta} from "../../conta/conta.model";
 import {ContaService} from "../../conta/service/conta.service";
 import {ASC, DESC} from "../../../config/navigation.constants";
-import { AbstractControl } from '@angular/forms';
+import {AbstractControl} from '@angular/forms';
 import {ProdutoService} from "../../produto/service/produto.service";
 import {VendaProdutoService} from "../../venda-produto/service/venda-produto.service";
+import {VendaProduto} from "../../venda-produto/venda-produto.model";
 
 @Component({
   selector: 'jhi-venda-update',
@@ -26,6 +27,7 @@ export class VendaUpdateComponent implements OnInit {
   produtosSharedCollection: IConta[] = [];
   predicate = 'equipe,nome';
   ascending = true;
+  vendaProdutos: VendaProduto[] = [new VendaProduto()];
 
   editForm: VendaFormGroup = this.vendaFormService.createVendaFormGroup();
 
@@ -36,13 +38,14 @@ export class VendaUpdateComponent implements OnInit {
     protected contaService: ContaService,
     protected produtoService: ProdutoService,
     protected vendaProdutoService: VendaProdutoService
-  ) {}
+  ) {
+  }
 
   compareConta = (o1: IConta | null, o2: IConta | null): boolean => this.contaService.compareConta(o1, o2);
   compareProduto = (o1: IProduto | null, o2: IProduto | null): boolean => this.produtoService.compareProduto(o1, o2);
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ venda }) => {
+    this.activatedRoute.data.subscribe(({venda}) => {
       this.venda = venda;
       if (venda) {
         this.updateForm(venda);
@@ -113,5 +116,25 @@ export class VendaUpdateComponent implements OnInit {
 
   getField(field: string): AbstractControl<any, any> | null {
     return this.editForm.get(field);
+  }
+
+  createNew() {
+    this.vendaProdutos.push(new VendaProduto());
+  }
+
+  remove(index: number) {
+    this.vendaProdutos.splice(index, 1);
+  }
+
+  podeRemover() {
+    return this.vendaProdutos.length > 1;
+  }
+
+  quantidadeUpdated($event: any, index) {
+  }
+
+  valorUnitarioUpdated($event: any, index) {
+
+
   }
 }
