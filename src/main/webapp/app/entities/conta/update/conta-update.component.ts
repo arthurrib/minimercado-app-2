@@ -7,6 +7,7 @@ import { finalize } from 'rxjs/operators';
 import { ContaFormService, ContaFormGroup } from './conta-form.service';
 import { IConta } from '../conta.model';
 import { ContaService } from '../service/conta.service';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'jhi-conta-update',
@@ -69,5 +70,9 @@ export class ContaUpdateComponent implements OnInit {
   protected updateForm(conta: IConta): void {
     this.conta = conta;
     this.contaFormService.resetForm(this.editForm, conta);
+  }
+
+  getField(field: string): AbstractControl<any, any> | null{
+    return this.editForm.get(field);
   }
 }

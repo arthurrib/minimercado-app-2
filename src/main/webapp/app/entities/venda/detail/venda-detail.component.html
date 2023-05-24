@@ -14,13 +14,13 @@
         <dd>
           <span>{{ venda.id }}</span>
         </dd>
-        <dt><span>Data</span></dt>
+        <dt><span>Conta</span></dt>
         <dd>
-          <span>{{ venda.data | formatMediumDatetime }}</span>
+          <span>{{ venda.conta?.nome }}</span>
         </dd>
-        <dt><span>Status</span></dt>
+        <dt><span>Observações</span></dt>
         <dd>
-          <span>{{ venda.status }}</span>
+          <span>{{ venda.observacoes }}</span>
         </dd>
       </dl>
 

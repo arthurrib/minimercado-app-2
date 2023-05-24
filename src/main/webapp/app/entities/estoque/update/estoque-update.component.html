@@ -10,9 +10,9 @@
         <div class="row mb-3">
           <app-form-field [control]="getField('produto')" class="col-12 p-0">
             <label class="form-label" for="field_valor">Produto</label>
-            <select class="form-control" name="categoria" id="field_categoria" data-cy="categoria"
-                    formControlName="categoria">
-              <option *ngFor="let produto of produtos" [value]="produto">{{produto.categoria}} | {{produto.nome}}</option>
+            <select class="form-control" name="produto" id="field_produto" data-cy="produto" [compareWith]="compareProduto"
+                    formControlName="produto">
+              <option *ngFor="let produto of produtosSharedCollection" [ngValue]="produto">{{produto.categoria}} | {{produto.nome}}</option>
             </select>
           </app-form-field>
         </div>

@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Injectable} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
-import { IVenda, NewVenda } from '../venda.model';
+import {IVenda, NewVenda} from '../venda.model';
 
 /**
  * A partial Type with required key is used as form input.
@@ -27,48 +26,46 @@ type VendaFormRawValue = FormValueOf<IVenda>;
 
 type NewVendaFormRawValue = FormValueOf<NewVenda>;
 
-type VendaFormDefaults = Pick<NewVenda, 'id' | 'data'>;
+type VendaFormDefaults = Pick<NewVenda, 'id'>;
 
 type VendaFormGroupContent = {
   id: FormControl<VendaFormRawValue['id'] | NewVenda['id']>;
-  data: FormControl<VendaFormRawValue['data']>;
-  status: FormControl<VendaFormRawValue['status']>;
+  observacoes: FormControl<VendaFormRawValue['observacoes']>;
+  conta: FormControl<VendaFormRawValue['conta']>;
 };
 
 export type VendaFormGroup = FormGroup<VendaFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class VendaFormService {
-  createVendaFormGroup(venda: VendaFormGroupInput = { id: null }): VendaFormGroup {
-    const vendaRawValue = this.convertVendaToVendaRawValue({
+  createVendaFormGroup(venda: VendaFormGroupInput = {id: null}): VendaFormGroup {
+    const vendaRawValue = {
       ...this.getFormDefaults(),
       ...venda,
-    });
+    };
     return new FormGroup<VendaFormGroupContent>({
       id: new FormControl(
-        { value: vendaRawValue.id, disabled: true },
+        {value: vendaRawValue.id, disabled: true},
         {
           nonNullable: true,
           validators: [Validators.required],
         }
       ),
-      data: new FormControl(vendaRawValue.data, {
-        validators: [Validators.required],
-      }),
-      status: new FormControl(vendaRawValue.status),
+      observacoes: new FormControl(vendaRawValue.observacoes),
+      conta: new FormControl(vendaRawValue.conta),
     });
   }
 
   getVenda(form: VendaFormGroup): IVenda | NewVenda {
-    return this.convertVendaRawValueToVenda(form.getRawValue() as VendaFormRawValue | NewVendaFormRawValue);
+    return form.getRawValue() as IVenda | NewVenda;
   }
 
   resetForm(form: VendaFormGroup, venda: VendaFormGroupInput): void {
-    const vendaRawValue = this.convertVendaToVendaRawValue({ ...this.getFormDefaults(), ...venda });
+    const vendaRawValue = {...this.getFormDefaults(), ...venda};
     form.reset(
       {
         ...vendaRawValue,
-        id: { value: vendaRawValue.id, disabled: true },
+        id: {value: vendaRawValue.id, disabled: true},
       } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */
     );
   }
@@ -77,24 +74,8 @@ export class VendaFormService {
     const currentTime = dayjs();
 
     return {
-      id: null,
-      data: currentTime,
+      id: null
     };
   }
 
-  private convertVendaRawValueToVenda(rawVenda: VendaFormRawValue | NewVendaFormRawValue): IVenda | NewVenda {
-    return {
-      ...rawVenda,
-      data: dayjs(rawVenda.data, DATE_TIME_FORMAT),
-    };
-  }
-
-  private convertVendaToVendaRawValue(
-    venda: IVenda | (Partial<NewVenda> & VendaFormDefaults)
-  ): VendaFormRawValue | PartialWithRequiredKeyOf<NewVendaFormRawValue> {
-    return {
-      ...venda,
-      data: venda.data ? venda.data.format(DATE_TIME_FORMAT) : undefined,
-    };
-  }
 }

@@ -1,9 +1,9 @@
-import dayjs from 'dayjs/esm';
+import {IConta} from "../conta/conta.model";
 
 export interface IVenda {
   id: number;
-  data?: dayjs.Dayjs | null;
-  status?: string | null;
+  conta?: Pick<IConta, 'id' | 'nome' | 'equipe'> | null;
+  observacoes?: string | null;
 }
 
 export type NewVenda = Omit<IVenda, 'id'> & { id: null };

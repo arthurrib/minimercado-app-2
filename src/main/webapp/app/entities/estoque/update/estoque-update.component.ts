@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpResponse} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
-import {finalize} from 'rxjs/operators';
+import {finalize, map} from 'rxjs/operators';
 
 import {EstoqueFormGroup, EstoqueFormService} from './estoque-form.service';
 import {IEstoque} from '../estoque.model';
@@ -21,7 +21,7 @@ export class EstoqueUpdateComponent implements OnInit {
   estoque: IEstoque | null = null;
 
   editForm: EstoqueFormGroup = this.estoqueFormService.createEstoqueFormGroup();
-  produtos: IProduto[];
+  produtosSharedCollection: IProduto[] = [];
   predicate = 'categoria,nome';
   ascending = true;
 
@@ -33,6 +33,8 @@ export class EstoqueUpdateComponent implements OnInit {
   ) {
   }
 
+  compareProduto = (o1: IProduto | null, o2: IProduto | null): boolean => this.produtoService.compareProduto(o1, o2);
+
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({estoque}) => {
       this.estoque = estoque;
@@ -40,9 +42,7 @@ export class EstoqueUpdateComponent implements OnInit {
         this.updateForm(estoque);
       }
     });
-    this.produtoService.query({sort: this.getSortQueryParam(), size: 200}).subscribe(
-      (res: HttpResponse<IProduto[]>) => this.produtos = this.fillComponentAttributesFromResponseBody(res.body)
-    );
+    this.loadRelationshipsOptions();
   }
 
   protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
@@ -94,9 +94,22 @@ export class EstoqueUpdateComponent implements OnInit {
   protected updateForm(estoque: IEstoque): void {
     this.estoque = estoque;
     this.estoqueFormService.resetForm(this.editForm, estoque);
+
+    this.produtosSharedCollection = this.produtoService.addProdutoToCollectionIfMissing<IProduto>(
+      this.produtosSharedCollection,
+      estoque.produto
+    );
   }
 
   getField(field: string): AbstractControl<any, any> | null {
     return this.editForm.get(field);
+  }
+
+  protected loadRelationshipsOptions(): void {
+    this.produtoService
+      .query({sort: this.getSortQueryParam(), size: 200})
+      .pipe(map((res: HttpResponse<IProduto[]>) => res.body ?? []))
+      .pipe(map((produtos: IProduto[]) => this.estoqueService.addEstoqueToCollectionIfMissing<IProduto>(produtos, this.estoque?.produto)))
+      .subscribe((produtos: IProduto[]) => (this.produtosSharedCollection = produtos));
   }
 }

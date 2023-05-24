@@ -1,6 +1,6 @@
 <div>
   <h2 id="page-heading" data-cy="EstoqueHeading">
-    <span>Estoques</span>
+    <span>Estoque</span>
 
     <div class="d-flex justify-content-end">
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
@@ -31,64 +31,75 @@
   <div class="table-responsive table-entities" id="entities" *ngIf="estoques && estoques.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
-          <th scope="col" jhiSortBy="id">
-            <div class="d-flex">
-              <span>ID</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="qtd">
-            <div class="d-flex">
-              <span>Qtd</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="valor">
-            <div class="d-flex">
-              <span>Valor</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col"></th>
-        </tr>
+      <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+        <th scope="col" jhiSortBy="id">
+          <div class="d-flex">
+            <span>ID</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="produto.id">
+          <div class="d-flex">
+            <span>Produto</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="qtd">
+          <div class="d-flex">
+            <span>Qtd</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="valor">
+          <div class="d-flex">
+            <span>Valor de compra (unidade)</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col"></th>
+      </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let estoque of estoques; trackBy: trackId" data-cy="entityTable">
-          <td>
-            <a [routerLink]="['/estoque', estoque.id, 'view']">{{ estoque.id }}</a>
-          </td>
-          <td>{{ estoque.qtd }}</td>
-          <td>{{ estoque.valor }}</td>
-          <td class="text-end">
-            <div class="btn-group">
-              <button
-                type="submit"
-                [routerLink]="['/estoque', estoque.id, 'view']"
-                class="btn btn-info btn-sm"
-                data-cy="entityDetailsButton"
-              >
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline">View</span>
-              </button>
+      <tr *ngFor="let estoque of estoques; trackBy: trackId" data-cy="entityTable">
+        <td>
+          <a [routerLink]="['/estoque', estoque.id, 'view']">{{ estoque.id }}</a>
+        </td>
+        <td>
+          <div *ngIf="estoque.produto">
+            <a [routerLink]="['/estoque', estoque.produto.id, 'view']">{{ estoque.produto.nome }}</a>
+          </div>
+        </td>
+        <td>{{ estoque.qtd }}</td>
+        <td>{{ estoque.valor }}</td>
+        <td class="text-end">
+          <div class="btn-group">
+            <button
+              type="submit"
+              [routerLink]="['/estoque', estoque.id, 'view']"
+              class="btn btn-info btn-sm"
+              data-cy="entityDetailsButton"
+            >
+              <fa-icon icon="eye"></fa-icon>
+              <span class="d-none d-md-inline">View</span>
+            </button>
 
-              <button
-                type="submit"
-                [routerLink]="['/estoque', estoque.id, 'edit']"
-                class="btn btn-primary btn-sm"
-                data-cy="entityEditButton"
-              >
-                <fa-icon icon="pencil-alt"></fa-icon>
-                <span class="d-none d-md-inline">Edit</span>
-              </button>
+            <button
+              type="submit"
+              [routerLink]="['/estoque', estoque.id, 'edit']"
+              class="btn btn-primary btn-sm"
+              data-cy="entityEditButton"
+            >
+              <fa-icon icon="pencil-alt"></fa-icon>
+              <span class="d-none d-md-inline">Edit</span>
+            </button>
 
-              <button type="submit" (click)="delete(estoque)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                <fa-icon icon="times"></fa-icon>
-                <span class="d-none d-md-inline">Delete</span>
-              </button>
-            </div>
-          </td>
-        </tr>
+            <button type="submit" (click)="delete(estoque)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <fa-icon icon="times"></fa-icon>
+              <span class="d-none d-md-inline">Delete</span>
+            </button>
+          </div>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

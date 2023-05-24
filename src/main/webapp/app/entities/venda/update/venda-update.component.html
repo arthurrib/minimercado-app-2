@@ -1,45 +1,116 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-venda-heading" data-cy="VendaCreateUpdateHeading">Create or edit a Venda</h2>
+      <h2 id="jhi-venda-heading" data-cy="VendaCreateUpdateHeading">Cadastro de Venda</h2>
 
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
-          <label class="form-label" for="field_id">ID</label>
-          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        <div class="row mb-3">
+          <app-form-field [control]="getField('conta')" class="col-12 p-0">
+            <label class="form-label" for="field_conta">Conta</label>
+            <select class="form-control" name="conta" id="field_conta" data-cy="conta" [compareWith]="compareConta"
+                    formControlName="conta">
+              <option *ngFor="let conta of contasSharedCollection" [ngValue]="conta">{{conta.equipe}}
+                | {{conta.nome}}</option>
+            </select>
+          </app-form-field>
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" for="field_data">Data</label>
-          <div class="d-flex">
-            <input
-              id="field_data"
-              data-cy="data"
-              type="datetime-local"
-              class="form-control"
-              name="data"
-              formControlName="data"
-              placeholder="YYYY-MM-DD HH:mm"
-            />
-          </div>
-          <div *ngIf="editForm.get('data')!.invalid && (editForm.get('data')!.dirty || editForm.get('data')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('data')?.errors?.required"> This field is required. </small>
-            <small class="form-text text-danger" [hidden]="!editForm.get('data')?.errors?.datetimelocal">
-              This field should be a date and time.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" for="field_status">Status</label>
-          <input type="text" class="form-control" name="status" id="field_status" data-cy="status" formControlName="status" />
+          <app-form-field [control]="getField('observacoes')" class="col-12 p-0">
+            <label class="form-label" for="field_observacoes">Observações</label>
+            <textarea rows="3" class="form-control" name="observacoes" id="field_observacoes" data-cy="observacoes"
+                      formControlName="observacoes"></textarea>
+          </app-form-field>
         </div>
       </div>
 
+      <div class="servicos-container">
+          <div class="produtos-selecionados mt-2" *ngFor="let produto of produtosSharedCollection; let in = index">
+            <div class="row">
+              <div class="col-12 form-group">
+                <div>
+                  <label>Descrição do Serviço</label>
+                  <div class="edit-row float-right">
+                    <button class="btn btn-outline-primary" title="Adicionar" (click)="createNew()"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-outline-info" title="Duplicar" (click)="clone(in)"><i class="fa fa-clone"></i></button>
+                    <button class="btn btn-outline-danger" title="Remover" [disabled]="!podeRemover()" (click)="remove(in)">
+                      <i class="fa fa-remove"></i>
+                    </button>
+                  </div>
+                </div>
+                <app-servico-input-search
+                  inputPlaceholder="Digite aqui..."
+                  (inputTyped)="produto.discriminacao = $event"
+                  (onChange)="loadServico($event, produto)"
+                  (serverResponse)="produtoServerResponse = $event.body"
+                  [newInputTyped]="produto.discriminacao"
+                >
+                </app-servico-input-search>
+                <small *ngIf="!produto.discriminacao" class="ml-1">
+                  <i class="text-danger fa fa-times"></i>
+                  <span class="text-danger">Nenhum Produto Selecionado</span>
+                </small>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label>Quantidade *</label>
+                  <input
+                    (ngModelChange)="quantidadeUpdated($event, in)"
+                    [(ngModel)]="produto.quantidade"
+                    required
+                    min="0.1"
+                    class="form-control"
+                    name="qtde{{ in }}"
+                  />
+                  <p *ngIf="!produto.quantidade" class="text-danger"><small>*Campo obrigatório</small></p>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label>Valor Unitário *</label>
+                  <input
+                    (ngModelChange)="valorUnitarioUpdated($event, in)"
+                    [(ngModel)]="produto.valor"
+                    required
+                    min="0.1"
+                    class="form-control"
+                    name="valor{{ in }}"
+                    currencyMask
+                  />
+                  <p *ngIf="!produto.valor" class="text-danger">
+                    <small>*Campo obrigatório. <br />Ex: R$ 10,00</small>
+                  </p>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label>Desconto *</label>
+                  <input
+                    (ngModelChange)="descontoUpdated($event, in)"
+                    [(ngModel)]="produto.desconto"
+                    required
+                    placeholder="R$ 0,00"
+                    class="form-control"
+                    name="desconto{{ in }}"
+                    currencyMask
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label>Total</label>
+                  <h5>{{ produto.total | currency: 'BRL' }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
       <div>
-        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary"
+                (click)="previousState()">
           <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
         </button>
 
