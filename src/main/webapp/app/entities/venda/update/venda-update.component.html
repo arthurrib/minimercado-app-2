@@ -26,79 +26,98 @@
         </div>
       </div>
 
-      <div class="servicos-container">
-        <div class="produtos-selecionados mt-2" *ngFor="let produto of vendaProdutos; let in = index">
-          <div class="row">
-            <div class="col-12 form-group">
-              <div>
-                <label>Descrição do Serviço</label>
-                <div class="edit-row float-right">
-                  <button type="button" class="btn btn-outline-primary" title="Adicionar" (click)="createNew()">
-                    <fa-icon icon="plus"></fa-icon>
-                  </button>
-                  <button type="button" class="btn btn-outline-danger" title="Remover" [disabled]="!podeRemover()"
-                          (click)="remove(in)">
-                    <fa-icon icon="remove"></fa-icon>
-                  </button>
-                </div>
-              </div>
-
-              <!--              <small *ngIf="!produto.nome" class="ml-1">-->
-              <!--                <i class="text-danger fa fa-times"></i>-->
-              <!--                <span class="text-danger">Nenhum Produto Selecionado</span>-->
-              <!--              </small>-->
+      <div class="row">
+        <div class="col-12">
+          <h2>Produtos</h2>
+          <hr>
+        </div>
+        <div class="col-12 col-md-9 mb-3">
+          <select class="form-control" name="produto" id="field_produto" data-cy="produto"
+                  [compareWith]="compareProduto" [(ngModel)]="produtoSelected"
+                  [ngModelOptions]="{standalone: true}" placeholder="Selecionar">
+            <option [ngValue]="undefined">Selecionar Produto...</option>
+            <option *ngFor="let produto of produtosSharedCollection" [ngValue]="produto">{{produto.categoria}}
+              | {{produto.nome}}</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <button type="button" class="btn btn-block btn-primary float-right" title="Adicionar" (click)="createNew()"
+                  [disabled]="!produtoSelected || produtoSelected === undefined">
+            <fa-icon icon="plus"></fa-icon>&nbsp;Adicionar Produto
+          </button>
+        </div>
+      </div>
+      <div class="produtos-selecionados mt-2" *ngFor="let produtoVenda of vendaProdutos; let in = index">
+        <div class="row">
+          <div class="col-12 col-md-4">
+            <label>Produto</label>
+            <input type="text" class="form-control" readonly [value]="produtoVenda.produto?.nome">
+          </div>
+          <div class="col-12 col-md-2">
+            <div class="form-group">
+              <label>Quantidade</label>
+              <input
+                [(ngModel)]="produtoVenda.qtd"
+                [ngModelOptions]="{standalone: true}"
+                required
+                min="0"
+                class="form-control"
+                name="qtde{{ in }}"
+              />
             </div>
-            <div class="col-12 col-md-3">
-              <div class="form-group">
-                <label>Quantidade *</label>
-                <input
-                  (ngModelChange)="quantidadeUpdated($event, in)"
-                  [(ngModel)]="produto.qtd"
-                  [ngModelOptions]="{standalone: true}"
-                  required
-                  min="0.1"
-                  class="form-control"
-                  name="qtde{{ in }}"
-                />
-                <p *ngIf="!produto.qtd" class="text-danger"><small>*Campo obrigatório</small></p>
-              </div>
+          </div>
+          <div class="col-12 col-md-2">
+            <div class="form-group">
+              <label>Valor Unitário</label>
+              <input
+                [(ngModel)]="produtoVenda.valorUnitario"
+                [ngModelOptions]="{standalone: true}"
+                required
+                min="0.1"
+                class="form-control"
+                name="valor{{ in }}"
+                currencyMask
+              />
+              <p *ngIf="!produtoVenda.valorUnitario" class="text-danger">
+                <small>*Campo obrigatório. </small>
+              </p>
             </div>
-            <div class="col-12 col-md-3">
-              <div class="form-group">
-                <label>Valor Unitário *</label>
-                <input
-                  (ngModelChange)="valorUnitarioUpdated($event, in)"
-                  [(ngModel)]="produto.valorUnitario"
-                  [ngModelOptions]="{standalone: true}"
-                  required
-                  min="0.1"
-                  class="form-control"
-                  name="valor{{ in }}"
-                  currencyMask
-                />
-                <p *ngIf="!produto.valorUnitario" class="text-danger">
-                  <small>*Campo obrigatório. <br/>Ex: R$ 10,00</small>
-                </p>
-              </div>
-            </div>
+          </div>
+          <div class="col-12 col-md-2">
+            <label>Valor Total</label>
+            <h4 class="mt-2 mb-0"> {{calcTotal(produtoVenda.valorUnitario, produtoVenda.qtd)}}</h4>
+          </div>
+          <div class="col-12 col-md-2 d-flex align-items-end">
+            <button type="button" class="btn btn-outline-danger" title="Remover" (click)="remove(in)">
+              <fa-icon icon="remove"></fa-icon>
+              Excluir
+            </button>
+          </div>
+          <div class="col-12">
+            <hr>
           </div>
         </div>
       </div>
-
+      <div class="row mb-4 mt-3">
+        <div class="col-12">
+            <h2>Total da venda: <b>{{getValorTotal()}}</b></h2>
+            <hr>
+        </div>
+      </div>
       <div>
         <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary"
                 (click)="previousState()">
-          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
         </button>
 
         <button
           type="submit"
           id="save-entity"
           data-cy="entityCreateSaveButton"
-          [disabled]="editForm.invalid || isSaving"
-          class="btn btn-primary"
+          [disabled]="editForm.invalid || isSaving || vendaProdutos.length === 0 || !validateProdutos()"
+          class="btn btn-success"
         >
-          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Registrar venda</span>
         </button>
       </div>
     </form>

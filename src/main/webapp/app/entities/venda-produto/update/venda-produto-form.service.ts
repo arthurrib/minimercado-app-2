@@ -20,7 +20,6 @@ type VendaProdutoFormGroupContent = {
   id: FormControl<IVendaProduto['id'] | NewVendaProduto['id']>;
   qtd: FormControl<IVendaProduto['qtd']>;
   valorUnitario: FormControl<IVendaProduto['valorUnitario']>;
-  desconto: FormControl<IVendaProduto['desconto']>;
 };
 
 export type VendaProdutoFormGroup = FormGroup<VendaProdutoFormGroupContent>;
@@ -46,7 +45,6 @@ export class VendaProdutoFormService {
       valorUnitario: new FormControl(vendaProdutoRawValue.valorUnitario, {
         validators: [Validators.required],
       }),
-      desconto: new FormControl(vendaProdutoRawValue.desconto),
     });
   }
 

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
-import { IVendaProduto, NewVendaProduto } from '../venda-produto.model';
+import {IVendaProduto, NewVendaProduto, VendaProduto} from '../venda-produto.model';
 
 export type PartialUpdateVendaProduto = Partial<IVendaProduto> & Pick<IVendaProduto, 'id'>;
 
@@ -24,6 +24,16 @@ export class VendaProdutoService {
 
   update(vendaProduto: IVendaProduto): Observable<EntityResponseType> {
     return this.http.put<IVendaProduto>(`${this.resourceUrl}/${this.getVendaProdutoIdentifier(vendaProduto)}`, vendaProduto, {
+      observe: 'response',
+    });
+  }
+
+  createFix(vendaProduto: VendaProduto): Observable<EntityResponseType> {
+    return this.http.post<IVendaProduto>(this.resourceUrl, vendaProduto, { observe: 'response' });
+  }
+
+  updateFix(vendaProduto: VendaProduto): Observable<EntityResponseType> {
+    return this.http.put<IVendaProduto>(`${this.resourceUrl}/${vendaProduto.id}`, vendaProduto, {
       observe: 'response',
     });
   }

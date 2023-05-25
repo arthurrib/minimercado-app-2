@@ -7,9 +7,10 @@ import { VendaDeleteDialogComponent } from './delete/venda-delete-dialog.compone
 import { VendaRoutingModule } from './route/venda-routing.module';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { NgxMaskModule } from 'ngx-mask';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
-  imports: [SharedModule, VendaRoutingModule,  NgxCurrencyModule, NgxMaskModule.forRoot()],
+  imports: [SharedModule, VendaRoutingModule,  NgxCurrencyModule, NgxMaskModule.forRoot(), CommonModule],
   declarations: [VendaComponent, VendaDetailComponent, VendaUpdateComponent, VendaDeleteDialogComponent],
 })
 export class VendaModule {}

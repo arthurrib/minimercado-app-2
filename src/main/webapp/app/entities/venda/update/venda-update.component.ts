@@ -7,14 +7,14 @@ import {finalize, map} from 'rxjs/operators';
 import {VendaFormGroup, VendaFormService} from './venda-form.service';
 import {IVenda} from '../venda.model';
 import {VendaService} from '../service/venda.service';
-import {IProduto} from "../../produto/produto.model";
+import {IProduto, Produto} from "../../produto/produto.model";
 import {IConta} from "../../conta/conta.model";
 import {ContaService} from "../../conta/service/conta.service";
 import {ASC, DESC} from "../../../config/navigation.constants";
 import {AbstractControl} from '@angular/forms';
 import {ProdutoService} from "../../produto/service/produto.service";
 import {VendaProdutoService} from "../../venda-produto/service/venda-produto.service";
-import {VendaProduto} from "../../venda-produto/venda-produto.model";
+import {IVendaProduto, VendaProduto} from "../../venda-produto/venda-produto.model";
 
 @Component({
   selector: 'jhi-venda-update',
@@ -24,12 +24,13 @@ export class VendaUpdateComponent implements OnInit {
   isSaving = false;
   venda: IVenda | null = null;
   contasSharedCollection: IConta[] = [];
-  produtosSharedCollection: IConta[] = [];
+  produtosSharedCollection: IProduto[] = [];
   predicate = 'equipe,nome';
   ascending = true;
-  vendaProdutos: VendaProduto[] = [new VendaProduto()];
+  vendaProdutos: VendaProduto[] = [];
 
   editForm: VendaFormGroup = this.vendaFormService.createVendaFormGroup();
+  produtoSelected: Produto | undefined;
 
   constructor(
     protected vendaService: VendaService,
@@ -70,13 +71,32 @@ export class VendaUpdateComponent implements OnInit {
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IVenda>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
-      next: () => this.onSaveSuccess(),
+      next: (res: HttpResponse<IVenda>) => this.onSaveSuccess(res.body),
       error: () => this.onSaveError(),
     });
   }
 
-  protected onSaveSuccess(): void {
+
+  protected onSaveSuccess(venda: IVenda | null): void {
+    this.vendaProdutos.forEach(vp => {
+      vp.venda = venda;
+      if (vp.id) {
+        this.subscribeToSaveResponseVendaProduto(this.vendaProdutoService.updateFix(vp));
+      } else {
+        this.subscribeToSaveResponseVendaProduto(this.vendaProdutoService.createFix(vp));
+      }
+    });
+  }
+
+  private onSaveSuccessVendaProduto() {
     this.previousState();
+  }
+
+  protected subscribeToSaveResponseVendaProduto(result: Observable<HttpResponse<IVendaProduto>>): void {
+    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
+      next: (res: HttpResponse<IVendaProduto>) => this.onSaveSuccessVendaProduto(),
+      error: () => this.onSaveError(),
+    });
   }
 
   protected onSaveError(): void {
@@ -119,22 +139,39 @@ export class VendaUpdateComponent implements OnInit {
   }
 
   createNew() {
-    this.vendaProdutos.push(new VendaProduto());
+    if (!this.produtoSelected) return;
+    const vendaProduto = new VendaProduto();
+    vendaProduto.qtd = 1;
+    vendaProduto.produto = this.produtoSelected;
+    vendaProduto.valorUnitario = this.produtoSelected?.valor;
+    this.produtoSelected = undefined;
+    this.vendaProdutos.push(vendaProduto);
   }
 
   remove(index: number) {
     this.vendaProdutos.splice(index, 1);
   }
 
-  podeRemover() {
-    return this.vendaProdutos.length > 1;
+  calcTotal(valor: any, quantidade: any) {
+    if (!valor) return 0;
+    if (!quantidade) return 0;
+    return 'R$ ' + (valor * quantidade).toFixed(2);
   }
 
-  quantidadeUpdated($event: any, index) {
+  getValorTotal() {
+    let valorTotal = 0;
+    this.vendaProdutos.forEach(vp => {
+      // @ts-ignore
+      valorTotal += (vp.valorUnitario * vp.qtd)
+    });
+    return 'R$ ' + valorTotal.toFixed(2);
   }
 
-  valorUnitarioUpdated($event: any, index) {
-
-
+  validateProdutos() {
+    let result = true;
+    this.vendaProdutos.forEach(vp => {
+      result = result && !!vp.qtd && !!vp.produto && !!vp.valorUnitario;
+    });
+    return result;
   }
 }
