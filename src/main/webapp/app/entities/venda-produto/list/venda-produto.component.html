@@ -82,7 +82,9 @@
                 <span class="d-none d-md-inline">Editar</span>
               </button>
 
-              <button type="submit" (click)="delete(vendaProduto)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <button type="submit" (click)="delete(vendaProduto)" class="btn btn-danger btn-sm"
+                      data-cy="entityDeleteButton"
+                      *jhiHasAnyAuthority="'ROLE_ADMIN'">
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline">Remover</span>
               </button>

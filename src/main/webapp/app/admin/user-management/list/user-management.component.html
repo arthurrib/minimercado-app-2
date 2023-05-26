@@ -74,6 +74,7 @@
                 type="button"
                 (click)="deleteUser(user)"
                 class="btn btn-danger btn-sm"
+                *jhiHasAnyAuthority="'ROLE_ADMIN'"
                 [disabled]="!currentAccount || currentAccount.login === user.login"
               >
                 <fa-icon icon="times"></fa-icon>
