@@ -11,6 +11,7 @@
             <label class="form-label" for="field_conta">Conta</label>
             <select class="form-control" name="conta" id="field_conta" data-cy="conta" [compareWith]="compareConta"
                     formControlName="conta">
+              <option [ngValue]="undefined">Selecionar Conta...</option>
               <option *ngFor="let conta of contasSharedCollection" [ngValue]="conta">{{conta.equipe}}
                 | {{conta.nome}}</option>
             </select>
