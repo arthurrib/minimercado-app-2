@@ -1,6 +1,7 @@
 package app.minimercado.web.rest;
 
 import app.minimercado.domain.Produto;
+import app.minimercado.domain.Relatorio;
 import app.minimercado.repository.ProdutoRepository;
 import app.minimercado.service.ProdutoService;
 import app.minimercado.web.rest.errors.BadRequestAlertException;
@@ -150,6 +151,14 @@ public class ProdutoResource {
         Page<Produto> page = produtoService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/relatorios")
+    public ResponseEntity<List<Relatorio>> getRelatorio() {
+        log.debug("REST request to get a page of Relatorio");
+        List<Relatorio> page = produtoService.findAllRelatorio();
+//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().body(page);
     }
 
     /**

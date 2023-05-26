@@ -1,8 +1,15 @@
 package app.minimercado.service;
 
 import app.minimercado.domain.Produto;
+import app.minimercado.domain.Relatorio;
 import app.minimercado.repository.ProdutoRepository;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -106,5 +113,10 @@ public class ProdutoService {
     public void delete(Long id) {
         log.debug("Request to delete Produto : {}", id);
         produtoRepository.deleteById(id);
+    }
+
+    public List<Relatorio> findAllRelatorio() {
+        List<Object[]> result = produtoRepository.findRelatorio();
+        return result.stream().map(r -> new Relatorio((String) r[0], (BigInteger) r[1], (BigDecimal) r[2])).collect(Collectors.toList());
     }
 }

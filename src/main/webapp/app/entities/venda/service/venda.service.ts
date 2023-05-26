@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {isPresent} from 'app/core/util/operators';
 import {ApplicationConfigService} from 'app/core/config/application-config.service';
 import {createRequestOption} from 'app/core/request/request-util';
-import {IVenda, NewVenda} from '../venda.model';
+import {IVenda, NewVenda, VendaComProduto} from '../venda.model';
 
 export type PartialUpdateVenda = Partial<IVenda> & Pick<IVenda, 'id'>;
 
@@ -44,6 +44,15 @@ export class VendaService {
       .get<IVenda[]>(this.resourceUrl, {params: options, observe: 'response'});
   }
 
+  findByConta(idConta: number): Observable<HttpResponse<VendaComProduto[]>> {
+    const options = createRequestOption({
+      size: 1000,
+      sort: ['id,ASC'],
+    });
+    return this.http
+      .get<VendaComProduto[]>(`${this.resourceUrl}/conta/${idConta}`, {params: options, observe: 'response'});
+  }
+
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, {observe: 'response'});
   }
@@ -75,5 +84,4 @@ export class VendaService {
     }
     return vendaCollection;
   }
-
 }

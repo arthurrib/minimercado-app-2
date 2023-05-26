@@ -4,13 +4,16 @@ import app.minimercado.domain.VendaProduto;
 import app.minimercado.repository.VendaProdutoRepository;
 import app.minimercado.service.VendaProdutoService;
 import app.minimercado.web.rest.errors.BadRequestAlertException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +68,7 @@ public class VendaProdutoResource {
     /**
      * {@code PUT  /venda-produtos/:id} : Updates an existing vendaProduto.
      *
-     * @param id the id of the vendaProduto to save.
+     * @param id           the id of the vendaProduto to save.
      * @param vendaProduto the vendaProduto to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated vendaProduto,
      * or with status {@code 400 (Bad Request)} if the vendaProduto is not valid,
@@ -96,10 +99,21 @@ public class VendaProdutoResource {
             .body(result);
     }
 
+    @PutMapping("/venda-produtos/update-all")
+    public ResponseEntity<List<VendaProduto>> updateAll(@Valid @RequestBody List<VendaProduto> vendaProdutos) throws URISyntaxException {
+        List<VendaProduto> result = new ArrayList<>();
+        vendaProdutos.forEach(vp -> result.add(vendaProdutoService.save(vp)));
+
+        return ResponseEntity
+            .ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, vendaProdutos.get(0).getId().toString()))
+            .body(result);
+    }
+
     /**
      * {@code PATCH  /venda-produtos/:id} : Partial updates given fields of an existing vendaProduto, field will ignore if it is null
      *
-     * @param id the id of the vendaProduto to save.
+     * @param id           the id of the vendaProduto to save.
      * @param vendaProduto the vendaProduto to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated vendaProduto,
      * or with status {@code 400 (Bad Request)} if the vendaProduto is not valid,
@@ -107,7 +121,7 @@ public class VendaProdutoResource {
      * or with status {@code 500 (Internal Server Error)} if the vendaProduto couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/venda-produtos/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PatchMapping(value = "/venda-produtos/{id}", consumes = {"application/json", "application/merge-patch+json"})
     public ResponseEntity<VendaProduto> partialUpdateVendaProduto(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody VendaProduto vendaProduto
@@ -141,6 +155,12 @@ public class VendaProdutoResource {
     public List<VendaProduto> getAllVendaProdutos() {
         log.debug("REST request to get all VendaProdutos");
         return vendaProdutoService.findAll();
+    }
+
+    @GetMapping("/venda-produtos/venda/{idVenda}")
+    public List<VendaProduto> getAllVendaProdutos(@PathVariable("idVenda") Long idVenda) {
+        log.debug("REST request to get all VendaProdutos");
+        return vendaProdutoService.findAllByVenda(idVenda);
     }
 
     /**

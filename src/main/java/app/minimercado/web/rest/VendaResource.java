@@ -1,9 +1,11 @@
 package app.minimercado.web.rest;
 
 import app.minimercado.domain.Venda;
+import app.minimercado.domain.VendaComProdutos;
 import app.minimercado.repository.VendaRepository;
 import app.minimercado.service.VendaService;
 import app.minimercado.web.rest.errors.BadRequestAlertException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,7 +74,7 @@ public class VendaResource {
     /**
      * {@code PUT  /vendas/:id} : Updates an existing venda.
      *
-     * @param id the id of the venda to save.
+     * @param id    the id of the venda to save.
      * @param venda the venda to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated venda,
      * or with status {@code 400 (Bad Request)} if the venda is not valid,
@@ -103,7 +106,7 @@ public class VendaResource {
     /**
      * {@code PATCH  /vendas/:id} : Partial updates given fields of an existing venda, field will ignore if it is null
      *
-     * @param id the id of the venda to save.
+     * @param id    the id of the venda to save.
      * @param venda the venda to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated venda,
      * or with status {@code 400 (Bad Request)} if the venda is not valid,
@@ -111,7 +114,7 @@ public class VendaResource {
      * or with status {@code 500 (Internal Server Error)} if the venda couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/vendas/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PatchMapping(value = "/vendas/{id}", consumes = {"application/json", "application/merge-patch+json"})
     public ResponseEntity<Venda> partialUpdateVenda(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Venda venda
@@ -148,6 +151,15 @@ public class VendaResource {
         Page<Venda> page = vendaService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/vendas/conta/{idConta}")
+    public ResponseEntity<List<VendaComProdutos>> getAllVendasByConta(@PathVariable("idConta") Long idConta,
+                                                                      @org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+        log.debug("REST request to get a page of Vendas");
+        List<VendaComProdutos> page = vendaService.findAllByConta(idConta, pageable);
+//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), null);
+        return ResponseEntity.ok().body(page);
     }
 
     /**

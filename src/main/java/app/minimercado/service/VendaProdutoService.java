@@ -84,6 +84,10 @@ public class VendaProdutoService {
         return vendaProdutoRepository.findAll();
     }
 
+    public List<VendaProduto> findAllByVenda(Long idVenda) {
+        return vendaProdutoRepository.findAllByVenda_Id(idVenda);
+    }
+
     /**
      * Get one vendaProduto by id.
      *

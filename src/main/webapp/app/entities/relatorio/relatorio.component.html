@@ -1,0 +1,72 @@
+<div>
+  <h2 id="page-heading" data-cy="ProdutoHeading">
+    <span>Produtos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="relatorios?.length === 0">
+    <span>No Produtos found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="relatorios && relatorios.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col">
+            <div class="d-flex">
+              <span>Nome</span>
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex">
+              <span>Quantidade vendida</span>
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex">
+              <span>Valor Arrecadado</span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rel of relatorios" data-cy="entityTable">
+<!--          <td>-->
+<!--            <a [routerLink]="['/produto', produto.id, 'view']">{{ produto.id }}</a>-->
+<!--          </td>-->
+          <td>{{ rel.produtoNome }}</td>
+          <td>{{ rel.quantidadeVendida}}</td>
+          <td>{{ rel.totalVendido | currency: 'BRL' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="relatorios && relatorios.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

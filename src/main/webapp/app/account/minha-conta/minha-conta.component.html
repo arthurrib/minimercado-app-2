@@ -1,0 +1,106 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="conta">
+      <h2 data-cy="contaDetailsHeading"><span>Conta</span></h2>
+
+      <hr/>
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Nome</span></dt>
+        <dd>
+          <span>{{ conta.nome }}</span>
+        </dd>
+        <dt><span>Telefone</span></dt>
+        <dd>
+          <span>{{ conta.telefone }}</span>
+        </dd>
+        <dt><span>Equipe</span></dt>
+        <dd>
+          <span>{{ conta.equipe }}</span>
+        </dd>
+        <dt><span>Status</span></dt>
+        <dd>
+          <span>{{ conta.status }}</span>
+        </dd>
+      </dl>
+
+      <div class="row">
+        <div class="col-12">
+          <h2>Compras</h2>
+          <hr>
+        </div>
+        <div class="col-12">
+          <div class="table-responsive table-entities" id="entities"
+               *ngIf="vendaComProduto && vendaComProduto.length > 0">
+            <table class="table table-striped" aria-describedby="page-heading">
+              <thead>
+              <th>#</th>
+              <th>Data</th>
+              <th>Valor total</th>
+              <th>Observações</th>
+              <th>
+                <fa-icon icon="gear"></fa-icon>
+              </th>
+              </thead>
+              <tbody>
+              <ng-container *ngFor="let venda of vendaComProduto; let in = index; trackBy: trackId"
+                            data-cy="entityTable">
+                <tr>
+                  <td>{{in}}</td>
+                  <td>{{venda.createdDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+                  <td>{{getValorTotal(venda.produtos) | currency: 'BRL'}}</td>
+                  <td>{{venda.observacoes}}</td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-info" (click)="venda.expand = !venda.expand">
+                      <fa-icon icon="eye"></fa-icon>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="venda.expand">
+                  <td colspan="5">
+                    <div class="row" style="padding-left: 20px;">
+                      <div class="col-12">
+                        <table class="table table-striped" aria-describedby="page-heading">
+                          <thead>
+                          <th>#</th>
+                          <th>Produto</th>
+                          <th>Quantidade</th>
+                          <th>Valor Unitário</th>
+                          <th>Total</th>
+                          </thead>
+                          <tbody>
+                          <tr *ngFor="let produto of venda.produtos; let ind = index;">
+                            <td>{{ind}}</td>
+                            <td>{{produto.produto?.nome}}</td>
+                            <td>{{produto.qtd}}</td>
+                            <td>{{produto.valorUnitario | currency: 'BRL'}}</td>
+                            <td>{{getValorTotalProduto(produto) | currency: 'BRL'}}</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12">
+          <h2>Total da Fatura</h2>
+          <hr>
+          <h2><b>{{getTotalDaFatura() | currency: 'BRL'}}</b></h2>
+        </div>
+        <div class="col-12">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

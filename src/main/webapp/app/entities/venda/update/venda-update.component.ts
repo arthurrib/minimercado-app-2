@@ -50,10 +50,11 @@ export class VendaUpdateComponent implements OnInit {
       this.venda = venda;
       if (venda) {
         this.updateForm(venda);
+        this.loadProdutos(venda);
       }
     });
     this.loadRelationshipsOptions();
-  }
+  }npm
 
   previousState(): void {
     window.history.back();
@@ -78,23 +79,18 @@ export class VendaUpdateComponent implements OnInit {
 
 
   protected onSaveSuccess(venda: IVenda | null): void {
-    this.vendaProdutos.forEach(vp => {
-      vp.venda = venda;
-      if (vp.id) {
-        this.subscribeToSaveResponseVendaProduto(this.vendaProdutoService.updateFix(vp));
-      } else {
-        this.subscribeToSaveResponseVendaProduto(this.vendaProdutoService.createFix(vp));
-      }
-    });
+    this.vendaProdutos.forEach(vp => vp.venda = venda);
+    this.subscribeToSaveResponseVendaProduto(this.vendaProdutoService.updateAll(this.vendaProdutos));
   }
 
   private onSaveSuccessVendaProduto() {
+    this.isSaving = false;
     this.previousState();
   }
 
-  protected subscribeToSaveResponseVendaProduto(result: Observable<HttpResponse<IVendaProduto>>): void {
-    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
-      next: (res: HttpResponse<IVendaProduto>) => this.onSaveSuccessVendaProduto(),
+  protected subscribeToSaveResponseVendaProduto(result: Observable<HttpResponse<IVendaProduto[]>>): void {
+    result.subscribe({
+      next: (res: HttpResponse<IVendaProduto[]>) => this.onSaveSuccessVendaProduto(),
       error: () => this.onSaveError(),
     });
   }
@@ -104,7 +100,6 @@ export class VendaUpdateComponent implements OnInit {
   }
 
   protected onSaveFinalize(): void {
-    this.isSaving = false;
   }
 
   protected updateForm(venda: IVenda): void {
@@ -148,7 +143,10 @@ export class VendaUpdateComponent implements OnInit {
     this.vendaProdutos.push(vendaProduto);
   }
 
-  remove(index: number) {
+  remove(vendaProduto: VendaProduto, index: number) {
+    if (!!vendaProduto.id) {
+      this.vendaProdutoService.delete(vendaProduto.id).subscribe(() => console.log("removido"));
+    }
     this.vendaProdutos.splice(index, 1);
   }
 
@@ -173,5 +171,11 @@ export class VendaUpdateComponent implements OnInit {
       result = result && !!vp.qtd && !!vp.produto && !!vp.valorUnitario;
     });
     return result;
+  }
+
+  private loadProdutos(venda: IVenda) {
+    this.vendaProdutoService.findAllByVenda(venda.id)
+      .pipe(map((res: HttpResponse<VendaProduto[]>) => res.body ?? []))
+      .subscribe((vendaProdutos: VendaProduto[]) => this.vendaProdutos = vendaProdutos);
   }
 }

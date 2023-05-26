@@ -1,15 +1,32 @@
 <div class="row">
+  <div class="col-12">
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+  </div>
   <div class="col-12 col-md-4">
     <span class="hipster img-fluid rounded"></span>
   </div>
 
-  <div class="col-12 col-md-8  d-flex align-items-center">
+  <div class="col-12 col-md-8  d-flex align-items-center justify-content-center flex-column">
     <h2 class="display-4">Minimercado - 55º Segue-me</h2>
-  </div>
-  <div class="col-12">
-    <button class="btn btn-block btn-primary">Registrar venda</button>
-    <button class="btn btn-block btn-primary">Contas cadastradas</button>
-    <button class="btn btn-block btn-primary">Produtos Cadastrados</button>
-<!--    <button class="btn btn-block btn-primary">Estoque</button>-->
+    <button
+      id="jh-create-entity"
+      data-cy="entityCreateButton"
+      class="btn btn-primary jh-create-entity btn-block w-100 mt-2"
+      [routerLink]="['/venda/new']"
+    >
+      <fa-icon icon="plus"></fa-icon>
+      <span> Nova Venda </span>
+    </button>
+    <button
+      id="jh-create-entity-conta"
+      data-cy="entityCreateButtonConta"
+      class="btn btn-info jh-create-entity btn-block w-100 mt-2"
+      [routerLink]="['/conta']"
+    >
+      <fa-icon icon="user"></fa-icon>
+      <span> Contas </span>
+    </button>
   </div>
 </div>

@@ -25,6 +25,19 @@ export class ContaRoutingResolveService implements Resolve<IConta | null> {
         })
       );
     }
+    const telefone = route.params['telefone'];
+    if (telefone) {
+      return this.service.findByTelefone(telefone).pipe(
+        mergeMap((conta: HttpResponse<IConta>) => {
+          if (conta.body) {
+            return of(conta.body);
+          } else {
+            this.router.navigate(['404']);
+            return EMPTY;
+          }
+        })
+      );
+    }
     return of(null);
   }
 }

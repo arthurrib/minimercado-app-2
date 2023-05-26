@@ -61,6 +61,9 @@ public class ContaResource {
         if (conta.getId() != null) {
             throw new BadRequestAlertException("A new conta cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (contaRepository.existsByTelefone(conta.getTelefone())) {
+            throw new BadRequestAlertException("Ops! Já existe uma conta com este telefone.", ENTITY_NAME, "contaDuplicada");
+        }
         Conta result = contaService.save(conta);
         return ResponseEntity
             .created(new URI("/api/contas/" + result.getId()))
@@ -160,6 +163,13 @@ public class ContaResource {
     public ResponseEntity<Conta> getConta(@PathVariable Long id) {
         log.debug("REST request to get Conta : {}", id);
         Optional<Conta> conta = contaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(conta);
+    }
+
+    @GetMapping("/contas/telefone/{telefone}")
+    public ResponseEntity<Conta> getConta(@PathVariable String telefone) {
+        log.debug("REST request to get Conta : {}", telefone);
+        Optional<Conta> conta = contaService.findOneByTelefone(telefone);
         return ResponseUtil.wrapOrNotFound(conta);
     }
 

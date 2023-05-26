@@ -10,6 +10,11 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./produto/produto.module').then(m => m.ProdutoModule),
       },
       {
+        path: 'relatorio',
+        data: { pageTitle: 'Relatório' },
+        loadChildren: () => import('./relatorio/relatorio.module').then(m => m.RelatorioModule),
+      },
+      {
         path: 'conta',
         data: { pageTitle: 'Contas' },
         loadChildren: () => import('./conta/conta.module').then(m => m.ContaModule),

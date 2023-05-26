@@ -6,6 +6,7 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IProduto, NewProduto } from '../produto.model';
+import {Relatorio} from "../../relatorio/relatorio.model";
 
 export type PartialUpdateProduto = Partial<IProduto> & Pick<IProduto, 'id'>;
 
@@ -15,6 +16,7 @@ export type EntityArrayResponseType = HttpResponse<IProduto[]>;
 @Injectable({ providedIn: 'root' })
 export class ProdutoService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/produtos');
+  protected relatorioUrl = this.applicationConfigService.getEndpointFor('api/relatorios');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -32,6 +34,10 @@ export class ProdutoService {
 
   find(id: number): Observable<EntityResponseType> {
     return this.http.get<IProduto>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  getRelatorio(): Observable<HttpResponse<Relatorio[]>> {
+    return this.http.get<Relatorio[]>(this.relatorioUrl, { observe: 'response' });
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {

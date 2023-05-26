@@ -33,6 +33,9 @@ export class ContaService {
   find(id: number): Observable<EntityResponseType> {
     return this.http.get<IConta>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
+  findByTelefone(telefone: any): Observable<EntityResponseType> {
+    return this.http.get<IConta>(`${this.resourceUrl}/telefone/${telefone}`, { observe: 'response' });
+  }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);

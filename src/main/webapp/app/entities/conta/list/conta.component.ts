@@ -21,8 +21,7 @@ export class ContaComponent implements OnInit {
 
   predicate = 'id';
   ascending = true;
-
-  itemsPerPage = ITEMS_PER_PAGE;
+  itemsPerPage = 100;
   totalItems = 0;
   page = 1;
 

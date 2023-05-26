@@ -1,7 +1,12 @@
 package app.minimercado.service;
 
 import app.minimercado.domain.Venda;
+import app.minimercado.domain.VendaComProdutos;
+import app.minimercado.repository.VendaProdutoRepository;
 import app.minimercado.repository.VendaRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +25,12 @@ public class VendaService {
     private final Logger log = LoggerFactory.getLogger(VendaService.class);
 
     private final VendaRepository vendaRepository;
+    private final VendaProdutoRepository vendaProdutoRepository;
 
-    public VendaService(VendaRepository vendaRepository) {
+
+    public VendaService(VendaRepository vendaRepository,VendaProdutoRepository vendaProdutoRepository) {
         this.vendaRepository = vendaRepository;
+        this.vendaProdutoRepository = vendaProdutoRepository;
     }
 
     /**
@@ -83,6 +91,14 @@ public class VendaService {
         return vendaRepository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
+    public List<VendaComProdutos> findAllByConta(Long idConta, Pageable pageable) {
+        Page<Venda> vendas =  vendaRepository.findAllByConta_Id(idConta,pageable);
+        List<VendaComProdutos> result = new ArrayList<>();
+        vendas.getContent().forEach(v ->result.add(new VendaComProdutos(v, vendaProdutoRepository.findAllByVenda_Id(v.getId()))));
+        return result;
+    }
+
     /**
      * Get one venda by id.
      *
@@ -104,4 +120,6 @@ public class VendaService {
         log.debug("Request to delete Venda : {}", id);
         vendaRepository.deleteById(id);
     }
+
+
 }

@@ -88,7 +88,7 @@
             <h4 class="mt-2 mb-0"> {{calcTotal(produtoVenda.valorUnitario, produtoVenda.qtd)}}</h4>
           </div>
           <div class="col-12 col-md-2 d-flex align-items-end">
-            <button type="button" class="btn btn-outline-danger" title="Remover" (click)="remove(in)">
+            <button type="button" class="btn btn-outline-danger" title="Remover" (click)="remove(produtoVenda, in)">
               <fa-icon icon="remove"></fa-icon>
               Excluir
             </button>

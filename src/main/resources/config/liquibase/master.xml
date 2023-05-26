@@ -20,4 +20,5 @@
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
     <include file="config/liquibase/changelog/20230420022221_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/query_produtos.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

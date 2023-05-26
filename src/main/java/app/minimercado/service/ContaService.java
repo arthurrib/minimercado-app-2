@@ -101,6 +101,11 @@ public class ContaService {
         return contaRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Conta> findOneByTelefone(String telefone) {
+        return contaRepository.findByTelefone(telefone);
+    }
+
     /**
      * Delete the conta by id.
      *

@@ -39,7 +39,7 @@
           <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu" data-cy="entity">
             <span>
               <fa-icon icon="th-list"></fa-icon>
-              <span>Entities</span>
+              <span>Páginas</span>
             </span>
           </a>
           <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
@@ -52,7 +52,7 @@
                 (click)="collapseNavbar()"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                <span>Produto</span>
+                <span>Produtos</span>
               </a>
             </li>
             <li>
@@ -64,21 +64,21 @@
                 (click)="collapseNavbar()"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                <span>Conta</span>
+                <span>Contas</span>
               </a>
             </li>
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="estoque"
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="collapseNavbar()"
-              >
-                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                <span>Estoque</span>
-              </a>
-            </li>
+<!--            <li>-->
+<!--              <a-->
+<!--                class="dropdown-item"-->
+<!--                routerLink="estoque"-->
+<!--                routerLinkActive="active"-->
+<!--                [routerLinkActiveOptions]="{ exact: true }"-->
+<!--                (click)="collapseNavbar()"-->
+<!--              >-->
+<!--                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
+<!--                <span>Estoque</span>-->
+<!--              </a>-->
+<!--            </li>-->
             <li>
               <a
                 class="dropdown-item"
@@ -88,19 +88,19 @@
                 (click)="collapseNavbar()"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                <span>Venda</span>
+                <span>Vendas</span>
               </a>
             </li>
             <li>
               <a
                 class="dropdown-item"
-                routerLink="venda-produto"
+                routerLink="relatorio"
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                <span>Venda Produto</span>
+                <span>Relatório</span>
               </a>
             </li>
             <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->

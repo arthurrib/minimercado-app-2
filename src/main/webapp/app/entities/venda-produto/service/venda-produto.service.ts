@@ -38,6 +38,12 @@ export class VendaProdutoService {
     });
   }
 
+  updateAll(vendaProdutos: VendaProduto[]): Observable<HttpResponse<IVendaProduto[]>>{
+    return this.http.put<IVendaProduto[]>(`${this.resourceUrl}/update-all`, vendaProdutos, {
+      observe: 'response',
+    });
+  }
+
   partialUpdate(vendaProduto: PartialUpdateVendaProduto): Observable<EntityResponseType> {
     return this.http.patch<IVendaProduto>(`${this.resourceUrl}/${this.getVendaProdutoIdentifier(vendaProduto)}`, vendaProduto, {
       observe: 'response',
@@ -51,6 +57,10 @@ export class VendaProdutoService {
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http.get<IVendaProduto[]>(this.resourceUrl, { params: options, observe: 'response' });
+  }
+
+  findAllByVenda(idVenda: number): Observable<HttpResponse<VendaProduto[]>> {
+    return this.http.get<VendaProduto[]>(`${this.resourceUrl}/venda/${idVenda}`, { observe: 'response' });
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
