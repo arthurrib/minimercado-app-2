@@ -31,6 +31,7 @@ export class VendaUpdateComponent implements OnInit {
 
   editForm: VendaFormGroup = this.vendaFormService.createVendaFormGroup();
   produtoSelected: Produto | undefined;
+  filtroProdutos: string;
 
   constructor(
     protected vendaService: VendaService,
@@ -54,7 +55,10 @@ export class VendaUpdateComponent implements OnInit {
       }
     });
     this.loadRelationshipsOptions();
-  }npm
+  }
+
+  npm
+
 
   previousState(): void {
     window.history.back();
@@ -177,5 +181,10 @@ export class VendaUpdateComponent implements OnInit {
     this.vendaProdutoService.findAllByVenda(venda.id)
       .pipe(map((res: HttpResponse<VendaProduto[]>) => res.body ?? []))
       .subscribe((vendaProdutos: VendaProduto[]) => this.vendaProdutos = vendaProdutos);
+  }
+
+  filterProdutos() {
+    if (!this.filtroProdutos) return this.produtosSharedCollection;
+    return this.produtosSharedCollection.filter(p => p.categoria === this.filtroProdutos);
   }
 }

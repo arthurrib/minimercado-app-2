@@ -27,6 +27,30 @@
             </span>
           </a>
         </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="conta" (click)="collapseNavbar()">
+            <span>
+              <fa-icon icon="user"></fa-icon>
+              <span>Contas</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="conta" (click)="collapseNavbar()">
+            <span>
+              <fa-icon icon="user"></fa-icon>
+              <span>Contas</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="venda" (click)="collapseNavbar()">
+            <span>
+              <fa-icon icon="dollar-sign"></fa-icon>
+              <span>Vendas</span>
+            </span>
+          </a>
+        </li>
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
         <li
           *ngSwitchCase="true"
@@ -67,18 +91,6 @@
                 <span>Contas</span>
               </a>
             </li>
-<!--            <li>-->
-<!--              <a-->
-<!--                class="dropdown-item"-->
-<!--                routerLink="estoque"-->
-<!--                routerLinkActive="active"-->
-<!--                [routerLinkActiveOptions]="{ exact: true }"-->
-<!--                (click)="collapseNavbar()"-->
-<!--              >-->
-<!--                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                <span>Estoque</span>-->
-<!--              </a>-->
-<!--            </li>-->
             <li>
               <a
                 class="dropdown-item"

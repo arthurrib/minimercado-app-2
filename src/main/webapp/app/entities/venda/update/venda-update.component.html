@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center">
-  <div class="col-8">
+  <div class=" col-11 col-md-10">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2 id="jhi-venda-heading" data-cy="VendaCreateUpdateHeading">Cadastro de Venda</h2>
 
@@ -32,12 +32,72 @@
           <h2>Produtos</h2>
           <hr>
         </div>
+        <div class="col-12 mb-3">
+          <div class="btn-group btn-group-toggle" data-toggle="buttons" >
+            <label class="btn btn-secondary active" [class.active]="!filtroProdutos">
+              <input type="radio" name="options" id="option1" autocomplete="off" checked
+                     style="display: none;"
+                     [value]="undefined"
+                     [(ngModel)]="filtroProdutos"
+                     [ngModelOptions]="{standalone: true}"> TODOS
+            </label>
+            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'BEBIDA'">
+              <input type="radio" name="options" id="option2" autocomplete="off"
+                     style="display: none;"
+                     [value]="'BEBIDA'"
+                     [(ngModel)]="filtroProdutos"
+                     [ngModelOptions]="{standalone: true}"> BEBIDA
+            </label>
+            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'CAFE'">
+              <input type="radio" name="options" id="option3" autocomplete="off"
+                     style="display: none;"
+                     [value]="'CAFE'"
+                     [(ngModel)]="filtroProdutos"
+                     [ngModelOptions]="{standalone: true}"> CAFÉ
+            </label>
+            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'SALGADO'">
+              <input type="radio" name="options" id="option4" autocomplete="off"
+                     style="display: none;"
+                     [value]="'SALGADO'"
+                     [(ngModel)]="filtroProdutos"
+                     [ngModelOptions]="{standalone: true}"> SALGADO
+            </label>
+            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'PIZZA'">
+              <input type="radio" name="options" id="option5" autocomplete="off"
+                     style="display: none;"
+                     [value]="'PIZZA'"
+                     [(ngModel)]="filtroProdutos"
+                     [ngModelOptions]="{standalone: true}"> PIZZA
+            </label>
+            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'DOCE'">
+              <input type="radio" name="options" id="option6" autocomplete="off"
+                     style="display: none;"
+                     [value]="'DOCE'"
+                     [(ngModel)]="filtroProdutos"
+                     [ngModelOptions]="{standalone: true}"> DOCE
+            </label>
+            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'AVE_MARIA'">
+              <input type="radio" name="options" id="option7" autocomplete="off"
+                     style="display: none;"
+                     [value]="'AVE_MARIA'"
+                     [(ngModel)]="filtroProdutos"
+                     [ngModelOptions]="{standalone: true}"> AVE_MARIA
+            </label>
+            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'PAGAMENTO'">
+              <input type="radio" name="options" id="option8" autocomplete="off"
+                     style="display: none;"
+                     [value]="'PAGAMENTO'"
+                     [(ngModel)]="filtroProdutos"
+                     [ngModelOptions]="{standalone: true}"> PAGAMENTO
+            </label>
+          </div>
+        </div>
         <div class="col-12 col-md-9 mb-3">
           <select class="form-control" name="produto" id="field_produto" data-cy="produto"
                   [compareWith]="compareProduto" [(ngModel)]="produtoSelected"
                   [ngModelOptions]="{standalone: true}" placeholder="Selecionar">
             <option [ngValue]="undefined">Selecionar Produto...</option>
-            <option *ngFor="let produto of produtosSharedCollection" [ngValue]="produto">{{produto.categoria}}
+            <option *ngFor="let produto of filterProdutos()" [ngValue]="produto">{{produto.categoria}}
               | {{produto.nome}}</option>
           </select>
         </div>
@@ -78,6 +138,7 @@
                 class="form-control"
                 name="valor{{ in }}"
                 currencyMask
+                [options]="{ prefix: 'R$ ', allowNegative: true }"
               />
               <p *ngIf="!produtoVenda.valorUnitario" class="text-danger">
                 <small>*Campo obrigatório. </small>
@@ -101,8 +162,8 @@
       </div>
       <div class="row mb-4 mt-3">
         <div class="col-12">
-            <h2>Total da venda: <b>{{getValorTotal()}}</b></h2>
-            <hr>
+          <h2>Total da venda: <b>{{getValorTotal()}}</b></h2>
+          <hr>
         </div>
       </div>
       <div>
