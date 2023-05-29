@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, OnInit} from '@angular/core';
+import {HttpHeaders} from '@angular/common/http';
+import {ActivatedRoute, Data, ParamMap, Router} from '@angular/router';
+import {combineLatest, filter, Observable, switchMap, tap} from 'rxjs';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
-import { IVenda } from '../venda.model';
+import {IVenda} from '../venda.model';
 
-import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
-import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { EntityArrayResponseType, VendaService } from '../service/venda.service';
-import { VendaDeleteDialogComponent } from '../delete/venda-delete-dialog.component';
+import {ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER} from 'app/config/pagination.constants';
+import {ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT} from 'app/config/navigation.constants';
+import {EntityArrayResponseType, VendaService} from '../service/venda.service';
+import {VendaDeleteDialogComponent} from '../delete/venda-delete-dialog.component';
 
 @Component({
   selector: 'jhi-venda',
@@ -25,13 +25,15 @@ export class VendaComponent implements OnInit {
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;
   page = 1;
+  filterConta: string;
 
   constructor(
     protected vendaService: VendaService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal
-  ) {}
+  ) {
+  }
 
   trackId = (_index: number, item: IVenda): number => this.vendaService.getVendaIdentifier(item);
 
@@ -40,7 +42,7 @@ export class VendaComponent implements OnInit {
   }
 
   delete(venda: IVenda): void {
-    const modalRef = this.modalService.open(VendaDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(VendaDeleteDialogComponent, {size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.venda = venda;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed
@@ -106,8 +108,11 @@ export class VendaComponent implements OnInit {
     const queryObject = {
       page: pageToLoad - 1,
       size: this.itemsPerPage,
-      sort: this.getSortQueryParam(predicate, ascending),
+      sort: this.getSortQueryParam(predicate, ascending)
     };
+    if (this.filterConta) {
+      queryObject['filterConta'] = this.filterConta;
+    }
     return this.vendaService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
 

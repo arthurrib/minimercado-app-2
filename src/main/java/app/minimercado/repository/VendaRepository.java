@@ -4,6 +4,7 @@ import app.minimercado.domain.Venda;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,4 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VendaRepository extends JpaRepository<Venda, Long> {
     Page<Venda> findAllByConta_Id(Long idConta, Pageable pageable);
+
+    @Query("SELECT n FROM Venda n WHERE (:conta is null OR lower(n.conta.nome) like :conta)")
+    Page<Venda> findAllFilterConta(@Param("conta") String filterConta, Pageable pageable);
 }

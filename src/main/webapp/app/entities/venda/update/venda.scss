@@ -1,0 +1,26 @@
+.select-items {
+  position: absolute;
+  top: 70px;
+  background: #f4f4f4;
+  box-shadow: 0px 5px 7px -4px #00000099;
+  z-index: 9999;
+  &.select-produto{
+    top:37px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      padding: 5px 20px;
+      transition: all 0.1s;
+
+      &:hover {
+        background: white !important;
+        cursor: pointer;
+        //font-weight: bold;
+      }
+    }
+  }
+}

@@ -31,70 +31,92 @@
   <div class="table-responsive table-entities" id="entities" *ngIf="contas && contas.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
-          <th scope="col" jhiSortBy="id">
-            <div class="d-flex">
-              <span>ID</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="nome">
-            <div class="d-flex">
-              <span>Nome</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="telefone">
-            <div class="d-flex">
-              <span>Telefone</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="equipe">
-            <div class="d-flex">
-              <span>Equipe</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="status">
-            <div class="d-flex">
-              <span>Status</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col"></th>
-        </tr>
+      <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+        <th scope="col" jhiSortBy="id">
+          <div class="d-flex">
+            <span>ID</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="nome">
+          <div class="d-flex">
+            <span>Nome</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="telefone">
+          <div class="d-flex">
+            <span>Telefone</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="equipe">
+          <div class="d-flex">
+            <span>Equipe</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="equipe">
+          <div class="d-flex">
+            <span>Saldo</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="status">
+          <div class="d-flex">
+            <span>Status</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col"></th>
+      </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let conta of contas; trackBy: trackId" data-cy="entityTable">
-          <td>
-            <a [routerLink]="['/conta', conta.id, 'view']">{{ conta.id }}</a>
-          </td>
-          <td>{{ conta.nome }}</td>
-          <td>{{ conta.telefone }}</td>
-          <td>{{ conta.equipe }}</td>
-          <td>{{ conta.status }}</td>
-          <td class="text-end">
-            <div class="btn-group">
-              <button type="submit" [routerLink]="['/conta', conta.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline">Visualizar</span>
-              </button>
+      <tr *ngFor="let conta of contas; trackBy: trackId" data-cy="entityTable">
+        <td>
+          <a [routerLink]="['/conta', conta.id, 'view']">{{ conta.id }}</a>
+        </td>
+        <td>{{ conta.nome }}</td>
+        <td>{{ conta.telefone }}</td>
+        <td>{{ conta.equipe }}</td>
+        <td>{{ calcSaldo(conta) | currency: 'BRL' }}</td>
+        <td>
+          <ng-container *ngIf="(!conta.status) || conta.status === 'PENDENTE'; else pago">
+            <div class="badge badge-warning">PENDENTE</div>
+            <button class="btn btn-sm btn-info" (click)="informarPagamento(conta)">Informar Pagamento</button>
+          </ng-container>
+          <ng-template #pago>
+            <div class="badge badge-success">PAGO</div>
+          </ng-template>
+        </td>
+<!--        <td>-->
+<!--          <button (click)="getWppLink(conta)" class="btn btn-primary btn-sm">-->
+<!--            Enviar Mensagem-->
+<!--          </button>-->
+<!--        </td>-->
+        <td class="text-end">
+          <div class="btn-group">
+            <button type="submit" [routerLink]="['/conta', conta.id, 'view']" class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton">
+              <fa-icon icon="eye"></fa-icon>
+              <span class="d-none d-md-inline">Visualizar</span>
+            </button>
 
-              <button type="submit" [routerLink]="['/conta', conta.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
-                <fa-icon icon="pencil-alt"></fa-icon>
-                <span class="d-none d-md-inline">Editar</span>
-              </button>
+            <button type="submit" [routerLink]="['/conta', conta.id, 'edit']" class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton">
+              <fa-icon icon="pencil-alt"></fa-icon>
+              <span class="d-none d-md-inline">Editar</span>
+            </button>
 
-              <button type="submit" (click)="delete(conta)" class="btn btn-danger btn-sm"
-                      data-cy="entityDeleteButton"
-                      *jhiHasAnyAuthority="'ROLE_ADMIN'">
-                <fa-icon icon="times"></fa-icon>
-                <span class="d-none d-md-inline">Remover</span>
-              </button>
-            </div>
-          </td>
-        </tr>
+            <button type="submit" (click)="delete(conta)" class="btn btn-danger btn-sm"
+                    data-cy="entityDeleteButton"
+                    *jhiHasAnyAuthority="'ROLE_ADMIN'">
+              <fa-icon icon="times"></fa-icon>
+              <span class="d-none d-md-inline">Remover</span>
+            </button>
+          </div>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

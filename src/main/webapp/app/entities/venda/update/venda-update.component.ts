@@ -19,6 +19,7 @@ import {IVendaProduto, VendaProduto} from "../../venda-produto/venda-produto.mod
 @Component({
   selector: 'jhi-venda-update',
   templateUrl: './venda-update.component.html',
+  styleUrls: ['./venda.scss']
 })
 export class VendaUpdateComponent implements OnInit {
   isSaving = false;
@@ -32,6 +33,11 @@ export class VendaUpdateComponent implements OnInit {
   editForm: VendaFormGroup = this.vendaFormService.createVendaFormGroup();
   produtoSelected: Produto | undefined;
   filtroProdutos: string;
+  filtroProdutosSearch: string;
+  showProdutos: boolean;
+  showContas: boolean;
+  nomeProdutoSelecionado: string;
+  nomeContaSelecionada: any;
 
   constructor(
     protected vendaService: VendaService,
@@ -45,6 +51,8 @@ export class VendaUpdateComponent implements OnInit {
 
   compareConta = (o1: IConta | null, o2: IConta | null): boolean => this.contaService.compareConta(o1, o2);
   compareProduto = (o1: IProduto | null, o2: IProduto | null): boolean => this.produtoService.compareProduto(o1, o2);
+  filterConta: string;
+
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({venda}) => {
@@ -56,8 +64,6 @@ export class VendaUpdateComponent implements OnInit {
     });
     this.loadRelationshipsOptions();
   }
-
-  npm
 
 
   previousState(): void {
@@ -109,6 +115,7 @@ export class VendaUpdateComponent implements OnInit {
   protected updateForm(venda: IVenda): void {
     this.venda = venda;
     this.vendaFormService.resetForm(this.editForm, venda);
+    this.nomeContaSelecionada = this.getField('conta')?.value.nome
   }
 
   protected loadRelationshipsOptions(): void {
@@ -184,7 +191,32 @@ export class VendaUpdateComponent implements OnInit {
   }
 
   filterProdutos() {
-    if (!this.filtroProdutos) return this.produtosSharedCollection;
-    return this.produtosSharedCollection.filter(p => p.categoria === this.filtroProdutos);
+    let result = this.produtosSharedCollection;
+    if (this.filtroProdutos) {
+      result = result.filter(p => p.categoria === this.filtroProdutos);
+    }
+    if (this.filtroProdutosSearch) {
+      result = result.filter(p => p.nome?.toLocaleLowerCase().includes(this.filtroProdutosSearch.toLocaleLowerCase()));
+    }
+    return result;
+  }
+
+  filterContas() {
+    if (!this.filterConta) return this.contasSharedCollection;
+    return this.contasSharedCollection.filter(p => p.nome?.toLocaleLowerCase().includes(this.filterConta.toLocaleLowerCase()));
+  }
+
+  selectConta(conta) {
+    this.getField('conta')?.setValue(conta);
+    this.nomeContaSelecionada = conta.equipe + ' | ' + conta.nome;
+    this.showContas = false;
+  }
+
+  selectProduto(produto) {
+    this.produtoSelected = produto;
+    this.createNew();
+    this.nomeProdutoSelecionado = produto.categoria + ' | ' + produto.nome;
+    this.showProdutos = false;
+    this.nomeProdutoSelecionado = '';
   }
 }

@@ -1,0 +1,12 @@
+.badge {
+  padding: 5px 10px;
+  font-weight: bold;
+
+  &.badge-success {
+    background: green;
+  }
+
+  &.badge-warning {
+    background: #e5a200;
+  }
+}

@@ -15,7 +15,7 @@
         [routerLink]="['/venda/new']"
       >
         <fa-icon icon="plus"></fa-icon>
-        <span> Create a new Venda </span>
+        <span> Nova Venda </span>
       </button>
     </div>
   </h2>
@@ -26,6 +26,12 @@
 
   <div class="alert alert-warning" id="no-result" *ngIf="vendas?.length === 0">
     <span>No Vendas found</span>
+  </div>
+  <div class="row">
+    <div class="col-12 mb-3">
+      <label>Filtrar</label>
+      <input placeholder="Buscar por nome da conta" type="text" class="form-control" name="login" [(ngModel)]="filterConta" (input)="this.load()" />
+    </div>
   </div>
 
   <div class="table-responsive table-entities" id="entities" *ngIf="vendas && vendas.length > 0">
@@ -65,16 +71,10 @@
           <td>{{ venda.observacoes }}</td>
           <td class="text-end">
             <div class="btn-group">
-              <button type="submit" [routerLink]="['/venda', venda.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline">Visualizar</span>
-              </button>
-
               <button type="submit" [routerLink]="['/venda', venda.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline">Editar</span>
               </button>
-
               <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit" (click)="delete(venda)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline">Remover</span>

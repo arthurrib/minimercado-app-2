@@ -86,9 +86,12 @@ public class VendaService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Venda> findAll(Pageable pageable) {
+    public Page<Venda> findAll(String filterConta, Pageable pageable) {
         log.debug("Request to get all Vendas");
-        return vendaRepository.findAll(pageable);
+        if (filterConta != null) {
+            filterConta = String.format("%%%s%%", filterConta);
+        }
+        return vendaRepository.findAllFilterConta(filterConta, pageable);
     }
 
     @Transactional(readOnly = true)

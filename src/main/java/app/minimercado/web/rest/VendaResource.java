@@ -146,9 +146,10 @@ public class VendaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of vendas in body.
      */
     @GetMapping("/vendas")
-    public ResponseEntity<List<Venda>> getAllVendas(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<Venda>> getAllVendas(@org.springdoc.api.annotations.ParameterObject Pageable pageable,
+                                                    @RequestParam(value = "filterConta", required = false) String filterConta) {
         log.debug("REST request to get a page of Vendas");
-        Page<Venda> page = vendaService.findAll(pageable);
+        Page<Venda> page = vendaService.findAll(filterConta, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

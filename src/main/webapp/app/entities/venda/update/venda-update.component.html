@@ -6,16 +6,20 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="row mb-3">
-          <app-form-field [control]="getField('conta')" class="col-12 p-0">
-            <label class="form-label" for="field_conta">Conta</label>
-            <select class="form-control" name="conta" id="field_conta" data-cy="conta" [compareWith]="compareConta"
-                    formControlName="conta">
-              <option [ngValue]="undefined">Selecionar Conta...</option>
-              <option *ngFor="let conta of contasSharedCollection" [ngValue]="conta">{{conta.equipe}}
-                | {{conta.nome}}</option>
-            </select>
-          </app-form-field>
+        <div class="row mb-3 position-relative">
+          <label class="form-label" for="field_conta">Conta</label>
+          <input class="form-control" name="conta" id="field_conta" data-cy="conta" style="cursor: pointer"
+                 (click)="showContas = !showContas"
+                 [(ngModel)]="nomeContaSelecionada"
+                 [ngModelOptions]="{standalone: true}">
+          <div class="select-items p-0" *ngIf="showContas">
+            <input class="form-control" name="conta" id="field_filter_conta" [(ngModel)]="filterConta"
+                   [ngModelOptions]="{standalone: true}" placeholder="Buscar...">
+            <ul class="w-100">
+              <li *ngFor="let conta of filterContas()" (click)="selectConta(conta)">{{conta.equipe}}
+                | {{conta.nome}}</li>
+            </ul>
+          </div>
         </div>
 
         <div class="row mb-3">
@@ -33,7 +37,7 @@
           <hr>
         </div>
         <div class="col-12 mb-3">
-          <div class="btn-group btn-group-toggle" data-toggle="buttons" >
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-secondary active" [class.active]="!filtroProdutos">
               <input type="radio" name="options" id="option1" autocomplete="off" checked
                      style="display: none;"
@@ -92,14 +96,27 @@
             </label>
           </div>
         </div>
-        <div class="col-12 col-md-9 mb-3">
-          <select class="form-control" name="produto" id="field_produto" data-cy="produto"
-                  [compareWith]="compareProduto" [(ngModel)]="produtoSelected"
-                  [ngModelOptions]="{standalone: true}" placeholder="Selecionar">
-            <option [ngValue]="undefined">Selecionar Produto...</option>
-            <option *ngFor="let produto of filterProdutos()" [ngValue]="produto">{{produto.categoria}}
-              | {{produto.nome}}</option>
-          </select>
+        <div class="col-12 col-md-9 mb-3 position-relative">
+          <input class="form-control" name="conta" id="field_produto" data-cy="produto" style="cursor: pointer"
+                 [placeholder]="showProdutos ? 'Buscar...' : 'Selecionar Produto'"
+                 (click)="showProdutos = !showProdutos"
+                 [(ngModel)]="filtroProdutosSearch"
+                 [ngModelOptions]="{standalone: true}">
+          <div class="select-items select-produto p-0" *ngIf="showProdutos">
+<!--            <input class="form-control" name="conta" id="field_filter_produto" [(ngModel)]="filtroProdutosSearch"-->
+<!--                   [ngModelOptions]="{standalone: true}" placeholder="Buscar...">-->
+            <ul class="w-100">
+              <li *ngFor="let produto of filterProdutos()" (click)="selectProduto(produto)">{{produto.categoria}}
+                | {{produto.nome}} - {{produto.valor | currency:'BRL'}}</li>
+            </ul>
+          </div>
+<!--          <select class="form-control" name="produto" id="field_produto" data-cy="produto"-->
+<!--                  [compareWith]="compareProduto" [(ngModel)]="produtoSelected"-->
+<!--                  [ngModelOptions]="{standalone: true}" placeholder="Selecionar">-->
+<!--            <option [ngValue]="undefined">Selecionar Produto...</option>-->
+<!--            <option *ngFor="let produto of filterProdutos()" [ngValue]="produto">{{produto.categoria}}-->
+<!--              | {{produto.nome}}</option>-->
+<!--          </select>-->
         </div>
         <div class="col-12 col-md-3">
           <button type="button" class="btn btn-block btn-primary float-right" title="Adicionar" (click)="createNew()"
