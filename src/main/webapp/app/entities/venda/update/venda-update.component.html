@@ -79,8 +79,8 @@
           <div class="form-group">
             <label class="form-label" for="produto_field">Produtos</label>
             <ng-select groupBy="categoria" (change)="selectProduto($event)">
-              id="produto_field"
-              name="produto_field"
+<!--              id="produto_field"-->
+<!--              name="produto_field"-->
               <ng-option *ngFor="let p of filterProdutos" [value]="p">{{ p.nome }}</ng-option>
             </ng-select>
           </div>

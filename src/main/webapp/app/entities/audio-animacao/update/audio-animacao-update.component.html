@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class=" col-11 col-md-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-produto-heading" data-cy="ProdutoCreateUpdateHeading">Cadastro de Produto</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3">
+          <app-form-field [control]="getField('peca')" class="col-12 p-0">
+            <label class="form-label" for="field_peca">Peça</label>
+            <input type="text" class="form-control" name="peca" id="field_peca" data-cy="peca" formControlName="peca"/>
+          </app-form-field>
+        </div>
+        <div class="row mb-3">
+          <app-form-field [control]="getField('cena')" class="col-12 p-0">
+            <label class="form-label" for="field_cena">Cena</label>
+            <input type="text" class="form-control" name="cena" id="field_cena" data-cy="cena" formControlName="cena"/>
+          </app-form-field>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <jhi-arquivos
+              tipo="processo-abertura-empresa"
+              [nomeArquivo]="'ConselhoDeClasse'"
+              (onChange)="onChangeArquivo($event)"
+            >
+              <!--            [uuid]="getResponsavelTecnicoField('uuidConselhoClasse')?.value"-->
+              <!--            [contentType]="getResponsavelTecnicoField('contentTypeConselhoClasse')?.value"-->
+            </jhi-arquivos>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary"
+                  (click)="previousState()">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
+          </button>
+
+          <button
+            type="submit"
+            id="save-entity"
+            data-cy="entityCreateSaveButton"
+            [disabled]="editForm.invalid || isSaving"
+            class="btn btn-primary"
+          >
+            <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

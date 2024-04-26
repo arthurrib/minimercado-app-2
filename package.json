@@ -1,8 +1,8 @@
 {
-  "name": "minimercado-app",
+  "name": "hub-retiros-nsps",
   "version": "0.0.1-SNAPSHOT",
   "private": true,
-  "description": "Description for minimercadoApp",
+  "description": "Hub de aplicações para retiros da NSPS",
   "license": "UNLICENSED",
   "scripts": {
     "app:start": "./gradlew",

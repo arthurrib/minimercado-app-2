@@ -1,0 +1,49 @@
+<div class="dropzone" jhiUploadArquivos *ngIf="!readonly">
+  <div class="row d-flex">
+    <div class="col-12 col-lg-9 p-0">
+      <div class="row d-flex align-items-center">
+        <div class="col-1 d-none d-xl-block">
+          <i class="fa fa-cloud-upload fa-2x" aria-hidden="true"></i>
+        </div>
+        <div class="col-10">
+          Arraste os arquivos<br />
+          <span class="max-file">Tamanho max.: 10.6MB</span>
+          <div *ngIf="!arquivos"><i class="fa fa-close text-danger"></i> Arquivo pendente</div>
+          <ng-container *ngIf="arquivos">
+            <div><i class="fa fa-check text-success"></i> Arquivo(s) selecionado(s)</div>
+              Arquivo_
+<!--              <span style="cursor: pointer" class="text-info" (click)="view(a, i)">-->
+<!--                <i class="fa fa-eye" *ngIf="!loadingView"></i>-->
+<!--                <i class="fa fa-spinner fa-spin" *ngIf="loadingView"></i>-->
+<!--                <span> Visualizar</span>-->
+<!--              </span>-->
+              <span style="cursor: pointer" class="text-info" (click)="delete()">
+                <i class="fa fa-close text-danger"></i>
+                <span class="text-danger"> Remover</span>
+              </span>
+              <br />
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-3 d-flex align-items-center justify-content-end">
+      <label class="btn btn-primary m-0" aria-hidden="true" tabindex="0" [for]="'file-' + nomeArquivo">
+        <i class="fa fa-spinner fa-spin" *ngIf="loadingUpload"></i>
+        <span *ngIf="!arquivos">Escolher arquivo</span>
+        <span *ngIf="arquivos">Adicionar arquivo</span>
+      </label>
+      <input class="d-none" type="file" [id]="'file-' + nomeArquivo" (change)="readFile($event?.target)" />
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="readonly">
+  <div *ngIf="!arquivos" class="text-warning">Nenhum arquivo informado.</div>
+  <ng-container>
+    <div style="cursor: pointer" class="text-info d-flex align-items-center">
+      <i class="fa fa-eye" *ngIf="!loadingView"></i>
+      <i class="fa fa-spinner fa-spin" *ngIf="loadingView"></i>
+      <div class="ml-1">{{ nomeArquivo }} - Visualizar</div>
+    </div>
+    <br />
+  </ng-container>
+</ng-container>
