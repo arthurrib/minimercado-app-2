@@ -7,10 +7,11 @@ import {ContaDeleteDialogComponent} from './delete/conta-delete-dialog.component
 import {ContaRoutingModule} from './route/conta-routing.module';
 import {NgxCurrencyModule} from 'ngx-currency';
 import {NgxMaskModule} from 'ngx-mask';
+import {InformarPagamentoDialogComponent} from "./informar-pagamento-dialog/informar-pagamento-dialog.component";
 
 @NgModule({
   imports: [SharedModule, ContaRoutingModule, NgxCurrencyModule, NgxMaskModule.forRoot()],
-  declarations: [ContaComponent, ContaDetailComponent, ContaUpdateComponent, ContaDeleteDialogComponent],
+  declarations: [ContaComponent, ContaDetailComponent, ContaUpdateComponent, ContaDeleteDialogComponent,InformarPagamentoDialogComponent],
 })
 export class ContaModule {
 }

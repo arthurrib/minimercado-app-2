@@ -17,7 +17,8 @@ export class Conta {
   public telefone?: string | null,
   public equipe?: string | null,
   public status?: string | null,
-  public vendaComProduto?: VendaComProduto[]
+  public vendaComProduto?: VendaComProduto[],
+  public saldoTotal?: number | null
   ) {
   }
 }

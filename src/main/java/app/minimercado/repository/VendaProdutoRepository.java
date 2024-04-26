@@ -13,4 +13,7 @@ import java.util.List;
 @Repository
 public interface VendaProdutoRepository extends JpaRepository<VendaProduto, Long> {
     List<VendaProduto> findAllByVenda_Id(Long idVenda);
+
+    @Query("SELECT n FROM VendaProduto n WHERE n.venda.conta.id = :contaId")
+    List<VendaProduto> getAllVendasByConta(Long contaId);
 }

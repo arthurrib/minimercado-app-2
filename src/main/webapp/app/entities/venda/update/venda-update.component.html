@@ -1,34 +1,51 @@
 <div class="d-flex justify-content-center">
   <div class=" col-11 col-md-10">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-venda-heading" data-cy="VendaCreateUpdateHeading">Cadastro de Venda</h2>
+      <h2 id="jhi-venda-heading" data-cy="VendaCreateUpdateHeading"><fa-icon icon="plus"></fa-icon> Nova venda</h2>
 
       <div>
         <jhi-alert-error></jhi-alert-error>
 
         <div class="row mb-3 position-relative">
-          <label class="form-label" for="field_conta">Conta</label>
-          <input class="form-control" name="conta" id="field_conta" data-cy="conta" style="cursor: pointer"
-                 (click)="showContas = !showContas"
-                 [(ngModel)]="nomeContaSelecionada"
-                 [ngModelOptions]="{standalone: true}">
-          <div class="select-items p-0" *ngIf="showContas">
-            <input class="form-control" name="conta" id="field_filter_conta" [(ngModel)]="filterConta"
-                   [ngModelOptions]="{standalone: true}" placeholder="Buscar...">
-            <ul class="w-100">
-              <li *ngFor="let conta of filterContas()" (click)="selectConta(conta)">{{conta.equipe}}
-                | {{conta.nome}}</li>
-            </ul>
+          <div class="col-12">
+            <div class="form-group">
+              <label class="form-label" for="nome_field">Conta</label>
+              <ng-select [items]="contasSharedCollection"
+                         id="nome_field"
+                         name="nome_field"
+                         bindLabel="nome"
+                         groupBy="equipe"
+                         (change)="selectConta($event)"
+                         formControlName="conta">
+                <ng-template ng-optgroup-tmp let-item="item">
+                  {{ item.equipe }}
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="card mt-3" *ngIf="contaSelecionada; else semContaSelecionada;">
+              <div class="card-header">
+                <h6>
+                  Conta selecionada: {{ contaSelecionada?.nome }}
+                  <button type="button" (click)="clearContaSelecionada()"
+                          style="float: right"
+                          class="btn btn-sm btn-danger">
+                    <fa-icon icon="times"></fa-icon>
+                  </button>
+                </h6>
+              </div>
+              <div class="card-body">
+                <p><b>Equipe:</b> {{ contaSelecionada?.equipe }}</p>
+                <p><b>Telefone:</b> {{ getContaTelefone | mask: '(00) 00000-0000' }}</p>
+              </div>
+            </div>
+            <ng-template #semContaSelecionada>
+              <div class="alert alert-info mt-3" role="alert">
+                <fa-icon icon="info"></fa-icon>&nbsp;Atenção! Nenhuma conta foi selecionada. A venda precisa ser paga no ato.
+              </div>
+            </ng-template>
           </div>
         </div>
 
-        <div class="row mb-3">
-          <app-form-field [control]="getField('observacoes')" class="col-12 p-0">
-            <label class="form-label" for="field_observacoes">Observações</label>
-            <textarea rows="3" class="form-control" name="observacoes" id="field_observacoes" data-cy="observacoes"
-                      formControlName="observacoes"></textarea>
-          </app-form-field>
-        </div>
       </div>
 
       <div class="row">
@@ -38,91 +55,35 @@
         </div>
         <div class="col-12 mb-3">
           <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn btn-secondary active" [class.active]="!filtroProdutos">
-              <input type="radio" name="options" id="option1" autocomplete="off" checked
+            <label class="btn btn-secondary active" [class.active]="!categoriaProdutoSelecionada" for="option">
+              <input type="radio" name="options" id="option" autocomplete="off" checked
                      style="display: none;"
                      [value]="undefined"
-                     [(ngModel)]="filtroProdutos"
+                     [(ngModel)]="categoriaProdutoSelecionada"
                      [ngModelOptions]="{standalone: true}"> TODOS
             </label>
-            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'BEBIDA'">
-              <input type="radio" name="options" id="option2" autocomplete="off"
-                     style="display: none;"
-                     [value]="'BEBIDA'"
-                     [(ngModel)]="filtroProdutos"
-                     [ngModelOptions]="{standalone: true}"> BEBIDA
-            </label>
-            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'CAFE'">
-              <input type="radio" name="options" id="option3" autocomplete="off"
-                     style="display: none;"
-                     [value]="'CAFE'"
-                     [(ngModel)]="filtroProdutos"
-                     [ngModelOptions]="{standalone: true}"> CAFÉ
-            </label>
-            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'SALGADO'">
-              <input type="radio" name="options" id="option4" autocomplete="off"
-                     style="display: none;"
-                     [value]="'SALGADO'"
-                     [(ngModel)]="filtroProdutos"
-                     [ngModelOptions]="{standalone: true}"> SALGADO
-            </label>
-            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'PIZZA'">
-              <input type="radio" name="options" id="option5" autocomplete="off"
-                     style="display: none;"
-                     [value]="'PIZZA'"
-                     [(ngModel)]="filtroProdutos"
-                     [ngModelOptions]="{standalone: true}"> PIZZA
-            </label>
-            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'DOCE'">
-              <input type="radio" name="options" id="option6" autocomplete="off"
-                     style="display: none;"
-                     [value]="'DOCE'"
-                     [(ngModel)]="filtroProdutos"
-                     [ngModelOptions]="{standalone: true}"> DOCE
-            </label>
-            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'AVE_MARIA'">
-              <input type="radio" name="options" id="option7" autocomplete="off"
-                     style="display: none;"
-                     [value]="'AVE_MARIA'"
-                     [(ngModel)]="filtroProdutos"
-                     [ngModelOptions]="{standalone: true}"> AVE_MARIA
-            </label>
-            <label class="btn btn-secondary" [class.active]="filtroProdutos === 'PAGAMENTO'">
-              <input type="radio" name="options" id="option8" autocomplete="off"
-                     style="display: none;"
-                     [value]="'PAGAMENTO'"
-                     [(ngModel)]="filtroProdutos"
-                     [ngModelOptions]="{standalone: true}"> PAGAMENTO
-            </label>
+            <ng-container *ngFor="let cat of categorias; let i = index;">
+              <label class="btn btn-secondary"
+                     for="option{{i}}"
+                     [class.active]="categoriaProdutoSelecionada === cat">
+                <input type="radio" name="options" id="option{{i}}" autocomplete="off"
+                       style="display: none;"
+                       [value]="cat"
+                       [(ngModel)]="categoriaProdutoSelecionada"
+                       [ngModelOptions]="{standalone: true}"> {{ cat }}
+              </label>
+            </ng-container>
           </div>
         </div>
-        <div class="col-12 col-md-9 mb-3 position-relative">
-          <input class="form-control" name="conta" id="field_produto" data-cy="produto" style="cursor: pointer"
-                 [placeholder]="showProdutos ? 'Buscar...' : 'Selecionar Produto'"
-                 (click)="showProdutos = !showProdutos"
-                 [(ngModel)]="filtroProdutosSearch"
-                 [ngModelOptions]="{standalone: true}">
-          <div class="select-items select-produto p-0" *ngIf="showProdutos">
-<!--            <input class="form-control" name="conta" id="field_filter_produto" [(ngModel)]="filtroProdutosSearch"-->
-<!--                   [ngModelOptions]="{standalone: true}" placeholder="Buscar...">-->
-            <ul class="w-100">
-              <li *ngFor="let produto of filterProdutos()" (click)="selectProduto(produto)">{{produto.categoria}}
-                | {{produto.nome}} - {{produto.valor | currency:'BRL'}}</li>
-            </ul>
+        <div class="col-12 mb-3 position-relative">
+          <div class="form-group">
+            <label class="form-label" for="produto_field">Produtos</label>
+            <ng-select groupBy="categoria" (change)="selectProduto($event)">
+              id="produto_field"
+              name="produto_field"
+              <ng-option *ngFor="let p of filterProdutos" [value]="p">{{ p.nome }}</ng-option>
+            </ng-select>
           </div>
-<!--          <select class="form-control" name="produto" id="field_produto" data-cy="produto"-->
-<!--                  [compareWith]="compareProduto" [(ngModel)]="produtoSelected"-->
-<!--                  [ngModelOptions]="{standalone: true}" placeholder="Selecionar">-->
-<!--            <option [ngValue]="undefined">Selecionar Produto...</option>-->
-<!--            <option *ngFor="let produto of filterProdutos()" [ngValue]="produto">{{produto.categoria}}-->
-<!--              | {{produto.nome}}</option>-->
-<!--          </select>-->
-        </div>
-        <div class="col-12 col-md-3">
-          <button type="button" class="btn btn-block btn-primary float-right" title="Adicionar" (click)="createNew()"
-                  [disabled]="!produtoSelected || produtoSelected === undefined">
-            <fa-icon icon="plus"></fa-icon>&nbsp;Adicionar Produto
-          </button>
         </div>
       </div>
       <div class="produtos-selecionados mt-2" *ngFor="let produtoVenda of vendaProdutos; let in = index">
@@ -164,11 +125,11 @@
           </div>
           <div class="col-12 col-md-2">
             <label>Valor Total</label>
-            <h4 class="mt-2 mb-0"> {{calcTotal(produtoVenda.valorUnitario, produtoVenda.qtd)}}</h4>
+            <h4 class="mt-2 mb-0"> {{ calcTotal(produtoVenda.valorUnitario, produtoVenda.qtd) }}</h4>
           </div>
           <div class="col-12 col-md-2 d-flex align-items-end">
             <button type="button" class="btn btn-outline-danger" title="Remover" (click)="remove(produtoVenda, in)">
-              <fa-icon icon="remove"></fa-icon>
+              <fa-icon icon="times"></fa-icon>
               Excluir
             </button>
           </div>
@@ -179,7 +140,7 @@
       </div>
       <div class="row mb-4 mt-3">
         <div class="col-12">
-          <h2>Total da venda: <b>{{getValorTotal()}}</b></h2>
+          <h2>Total da venda: <b>{{ getValorTotal() }}</b></h2>
           <hr>
         </div>
       </div>

@@ -49,4 +49,8 @@ public class VendaProduto implements Serializable {
     @JoinColumn(name = "id_venda", referencedColumnName = "id")
     private Venda venda;
 
+
+    public BigDecimal getValorTotal() {
+        return this.valorUnitario.multiply(BigDecimal.valueOf(this.qtd));
+    }
 }

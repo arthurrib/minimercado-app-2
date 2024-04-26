@@ -61,7 +61,7 @@ public class VendaProdutoResource {
         VendaProduto result = vendaProdutoService.save(vendaProduto);
         return ResponseEntity
             .created(new URI("/api/venda-produtos/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .headers(CustomHeaderUtil.entityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -95,7 +95,7 @@ public class VendaProdutoResource {
         VendaProduto result = vendaProdutoService.update(vendaProduto);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, vendaProduto.getId().toString()))
+            .headers(CustomHeaderUtil.entityUpdateAlert(applicationName, false, ENTITY_NAME, vendaProduto.getId().toString()))
             .body(result);
     }
 
@@ -106,7 +106,7 @@ public class VendaProdutoResource {
 
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, vendaProdutos.get(0).getId().toString()))
+            .headers(CustomHeaderUtil.entityUpdateAlert(applicationName, false, ENTITY_NAME, vendaProdutos.get(0).getId().toString()))
             .body(result);
     }
 
@@ -142,7 +142,7 @@ public class VendaProdutoResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, vendaProduto.getId().toString())
+            CustomHeaderUtil.entityUpdateAlert(applicationName, false, ENTITY_NAME, vendaProduto.getId().toString())
         );
     }
 
@@ -188,7 +188,7 @@ public class VendaProdutoResource {
         vendaProdutoService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .headers(CustomHeaderUtil.entityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
     }
 }

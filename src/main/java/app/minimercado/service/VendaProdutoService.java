@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -30,9 +31,15 @@ public class VendaProdutoService {
      * @param vendaProduto the entity to save.
      * @return the persisted entity.
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public VendaProduto save(VendaProduto vendaProduto) {
         log.debug("Request to save VendaProduto : {}", vendaProduto);
         return vendaProdutoRepository.save(vendaProduto);
+    }
+
+    public List<VendaProduto> getAllVendasByConta(Long contaId) {
+        log.debug("Request to get saldo by conta: {}", contaId);
+        return vendaProdutoRepository.getAllVendasByConta(contaId);
     }
 
     /**

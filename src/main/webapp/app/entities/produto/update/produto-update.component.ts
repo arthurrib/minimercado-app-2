@@ -18,6 +18,7 @@ export class ProdutoUpdateComponent implements OnInit {
   produto: IProduto | null = null;
 
   editForm: ProdutoFormGroup = this.produtoFormService.createProdutoFormGroup();
+  categorias: string[] = [];
 
   constructor(
     protected produtoService: ProdutoService,
@@ -32,6 +33,7 @@ export class ProdutoUpdateComponent implements OnInit {
         this.updateForm(produto);
       }
     });
+    this.produtoService.listAllCategories().subscribe(categorias => this.categorias = categorias.body ?? []);
   }
 
   previousState(): void {

@@ -65,9 +65,13 @@ public class VendaResource {
             throw new BadRequestAlertException("A new venda cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Venda result = vendaService.save(venda);
+        String notificationTarget = "Venda avulsa sem conta";
+        if (result.getConta() != null) {
+            notificationTarget = result.getConta().getNome();
+        }
         return ResponseEntity
             .created(new URI("/api/vendas/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .headers(CustomHeaderUtil.entityCreationAlert(applicationName, false, ENTITY_NAME, notificationTarget))
             .body(result);
     }
 
@@ -99,7 +103,7 @@ public class VendaResource {
         Venda result = vendaService.update(venda);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, venda.getId().toString()))
+            .headers(CustomHeaderUtil.entityUpdateAlert(applicationName, false, ENTITY_NAME, venda.getId().toString()))
             .body(result);
     }
 
@@ -135,7 +139,7 @@ public class VendaResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, venda.getId().toString())
+            CustomHeaderUtil.entityUpdateAlert(applicationName, false, ENTITY_NAME, venda.getId().toString())
         );
     }
 
@@ -188,7 +192,7 @@ public class VendaResource {
         vendaService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .headers(CustomHeaderUtil.entityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
     }
 }

@@ -1,17 +1,23 @@
 package app.minimercado.web.rest;
 
+import app.minimercado.domain.CategoriaProduto;
 import app.minimercado.domain.Produto;
 import app.minimercado.domain.Relatorio;
 import app.minimercado.repository.ProdutoRepository;
 import app.minimercado.service.ProdutoService;
 import app.minimercado.web.rest.errors.BadRequestAlertException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,14 +71,14 @@ public class ProdutoResource {
         Produto result = produtoService.save(produto);
         return ResponseEntity
             .created(new URI("/api/produtos/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .headers(CustomHeaderUtil.entityCreationAlert(applicationName, false, ENTITY_NAME, result.getNome()))
             .body(result);
     }
 
     /**
      * {@code PUT  /produtos/:id} : Updates an existing produto.
      *
-     * @param id the id of the produto to save.
+     * @param id      the id of the produto to save.
      * @param produto the produto to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated produto,
      * or with status {@code 400 (Bad Request)} if the produto is not valid,
@@ -99,14 +105,14 @@ public class ProdutoResource {
         Produto result = produtoService.update(produto);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, produto.getId().toString()))
+            .headers(CustomHeaderUtil.entityUpdateAlert(applicationName, false, ENTITY_NAME, produto.getNome()))
             .body(result);
     }
 
     /**
      * {@code PATCH  /produtos/:id} : Partial updates given fields of an existing produto, field will ignore if it is null
      *
-     * @param id the id of the produto to save.
+     * @param id      the id of the produto to save.
      * @param produto the produto to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated produto,
      * or with status {@code 400 (Bad Request)} if the produto is not valid,
@@ -114,7 +120,7 @@ public class ProdutoResource {
      * or with status {@code 500 (Internal Server Error)} if the produto couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/produtos/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PatchMapping(value = "/produtos/{id}", consumes = {"application/json", "application/merge-patch+json"})
     public ResponseEntity<Produto> partialUpdateProduto(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Produto produto
@@ -135,7 +141,7 @@ public class ProdutoResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, produto.getId().toString())
+            CustomHeaderUtil.entityUpdateAlert(applicationName, false, ENTITY_NAME, produto.getNome())
         );
     }
 
@@ -151,6 +157,21 @@ public class ProdutoResource {
         Page<Produto> page = produtoService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+
+    @GetMapping("/produtos/list-categories")
+    public ResponseEntity<List<String>> getAvailableProdutos() {
+        log.debug("REST request to get a page of Produtos");
+        List<String> result = produtoService.listCategories();
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/produtos/list-all-categories")
+    public ResponseEntity<List<String>> getAllProdutos() {
+        log.debug("REST request to get a page of Produtos");
+        List<String> result = Stream.of(CategoriaProduto.values()).map(Enum::name).collect(Collectors.toList());
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/relatorios")
@@ -186,7 +207,7 @@ public class ProdutoResource {
         produtoService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .headers(CustomHeaderUtil.entityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
     }
 }

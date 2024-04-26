@@ -22,18 +22,11 @@
         </div>
 
         <div class="row mb-3">
-          <app-form-field [control]="getField('valor')" class="col-12 p-0">
+          <app-form-field [control]="getField('categoria')" class="col-12 p-0">
             <label class="form-label" for="field_categoria">Categoria</label>
             <select class="form-control" name="categoria" id="field_categoria" data-cy="categoria"
                     formControlName="categoria">
-              <option value="BEBIDA">BEBIDA</option>
-              <option value="COMIDA">COMIDA</option>
-              <option value="CAFE">CAFE</option>
-              <option value="SALGADO">SALGADO</option>
-              <option value="PIZZA">PIZZA</option>
-              <option value="DOCE">DOCE</option>
-              <option value="AVE_MARIA">AVE MARIA</option>
-              <option value="PAGAMENTO">PAGAMENTO</option>
+              <option [value]="c" *ngFor="let c of categorias">{{c}}</option>
             </select>
           </app-form-field>
         </div>

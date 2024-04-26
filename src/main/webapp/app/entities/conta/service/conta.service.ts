@@ -1,49 +1,56 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
-import { IConta, NewConta } from '../conta.model';
+import {isPresent} from 'app/core/util/operators';
+import {ApplicationConfigService} from 'app/core/config/application-config.service';
+import {createRequestOption} from 'app/core/request/request-util';
+import {Conta, IConta, NewConta} from '../conta.model';
 
 export type PartialUpdateConta = Partial<IConta> & Pick<IConta, 'id'>;
 
 export type EntityResponseType = HttpResponse<IConta>;
 export type EntityArrayResponseType = HttpResponse<IConta[]>;
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class ContaService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/contas');
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
+  }
 
   create(conta: NewConta): Observable<EntityResponseType> {
-    return this.http.post<IConta>(this.resourceUrl, conta, { observe: 'response' });
+    return this.http.post<IConta>(this.resourceUrl, conta, {observe: 'response'});
   }
 
   update(conta: IConta): Observable<EntityResponseType> {
-    return this.http.put<IConta>(`${this.resourceUrl}/${this.getContaIdentifier(conta)}`, conta, { observe: 'response' });
+    return this.http.put<IConta>(`${this.resourceUrl}/${this.getContaIdentifier(conta)}`, conta, {observe: 'response'});
   }
 
   partialUpdate(conta: PartialUpdateConta): Observable<EntityResponseType> {
-    return this.http.patch<IConta>(`${this.resourceUrl}/${this.getContaIdentifier(conta)}`, conta, { observe: 'response' });
+    return this.http.patch<IConta>(`${this.resourceUrl}/${this.getContaIdentifier(conta)}`, conta, {observe: 'response'});
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IConta>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http.get<IConta>(`${this.resourceUrl}/${id}`, {observe: 'response'});
   }
+
   findByTelefone(telefone: any): Observable<EntityResponseType> {
-    return this.http.get<IConta>(`${this.resourceUrl}/telefone/${telefone}`, { observe: 'response' });
+    return this.http.get<IConta>(`${this.resourceUrl}/telefone/${telefone}`, {observe: 'response'});
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IConta[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<IConta[]>(this.resourceUrl, {params: options, observe: 'response'});
+  }
+
+  queryComSaldo(req?: any) {
+    const options = createRequestOption(req);
+    return this.http.get<Conta[]>(`${this.resourceUrl}/com-saldo`, {params: options, observe: 'response'});
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http.delete(`${this.resourceUrl}/${id}`, {observe: 'response'});
   }
 
   getContaIdentifier(conta: Pick<IConta, 'id'>): number {
@@ -72,5 +79,13 @@ export class ContaService {
       return [...contasToAdd, ...contaCollection];
     }
     return contaCollection;
+  }
+
+  informarPagamento(id: any, valorPagamento: number, observacoes: string, formaPagamento: string): Observable<EntityResponseType> {
+    return this.http.put<IConta>(`${this.resourceUrl}/informar-pagamento/conta/${id}`, {
+      valorPagamento,
+      observacoes,
+      formaPagamento
+    }, {observe: 'response'});
   }
 }

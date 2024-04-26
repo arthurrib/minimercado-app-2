@@ -32,9 +32,9 @@
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
-          <th scope="col" jhiSortBy="id">
+          <th scope="col" jhiSortBy="categoria">
             <div class="d-flex">
-              <span>ID</span>
+              <b>Categoria</b>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -50,35 +50,16 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="categoria">
-            <div class="d-flex">
-              <span>Categoria</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let produto of produtos; trackBy: trackId" data-cy="entityTable">
-          <td>
-            <a [routerLink]="['/produto', produto.id, 'view']">{{ produto.id }}</a>
-          </td>
+          <td>{{ produto.categoria }}</td>
           <td>{{ produto.nome }}</td>
           <td>{{ produto.valor | currency: 'BRL'}}</td>
-          <td>{{ produto.categoria }}</td>
           <td class="text-end">
             <div class="btn-group">
-              <button
-                type="submit"
-                [routerLink]="['/produto', produto.id, 'view']"
-                class="btn btn-info btn-sm"
-                data-cy="entityDetailsButton"
-              >
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline">Visualizar</span>
-              </button>
-
               <button
                 type="submit"
                 [routerLink]="['/produto', produto.id, 'edit']"

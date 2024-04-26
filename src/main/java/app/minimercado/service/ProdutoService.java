@@ -119,4 +119,8 @@ public class ProdutoService {
         List<Object[]> result = produtoRepository.findRelatorio();
         return result.stream().map(r -> new Relatorio((String) r[0], (BigInteger) r[1], (BigDecimal) r[2])).collect(Collectors.toList());
     }
+
+    public List<String> listCategories() {
+        return produtoRepository.listCategories();
+    }
 }

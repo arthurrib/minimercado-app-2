@@ -1,11 +1,20 @@
 package app.minimercado.service;
 
 import app.minimercado.domain.Conta;
+import app.minimercado.domain.ContaComProdutosDTO;
+import app.minimercado.domain.VendaComProdutos;
+import app.minimercado.domain.VendaProduto;
 import app.minimercado.repository.ContaRepository;
+
+import java.util.List;
 import java.util.Optional;
+
+import app.minimercado.repository.VendaProdutoRepository;
+import app.minimercado.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +29,15 @@ public class ContaService {
     private final Logger log = LoggerFactory.getLogger(ContaService.class);
 
     private final ContaRepository contaRepository;
+    private final VendaProdutoService vendaProdutoService;
+    private final VendaProdutoRepository vendaProdutoRepository;
+    private final VendaService vendaService;
 
-    public ContaService(ContaRepository contaRepository) {
+    public ContaService(ContaRepository contaRepository, VendaProdutoService vendaProdutoService, VendaProdutoRepository vendaProdutoRepository, VendaService vendaService) {
         this.contaRepository = contaRepository;
+        this.vendaProdutoService = vendaProdutoService;
+        this.vendaProdutoRepository = vendaProdutoRepository;
+        this.vendaService = vendaService;
     }
 
     /**
@@ -114,5 +129,16 @@ public class ContaService {
     public void delete(Long id) {
         log.debug("Request to delete Conta : {}", id);
         contaRepository.deleteById(id);
+    }
+
+    public boolean isSaldoZero() {
+        return false;
+    }
+
+    public ContaComProdutosDTO findOneComProdutos(Long idConta) {
+        Conta conta = contaRepository.findById(idConta).orElseThrow(() -> new BadRequestAlertException("Conta não encontrada", "conta", "idnotfound"));
+
+        List<VendaComProdutos> vendas = vendaService.findAllByConta(idConta);
+        return ContaComProdutosDTO.builder().produtos(vendas).conta(conta).build();
     }
 }

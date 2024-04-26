@@ -1,0 +1,50 @@
+<form *ngIf="conta" name="informarPagamento" (ngSubmit)="confirm()">
+  <div class="modal-header">
+    <h4 class="modal-title">Informar pagamento de conta</h4>
+
+    <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true" (click)="cancel()">&times;</button>
+  </div>
+
+  <div class="modal-body">
+    <jhi-alert-error></jhi-alert-error>
+
+    <h6>Conta: {{ conta?.nome }}</h6>
+    <p>Equipe: <b>{{ conta?.equipe }}</b></p>
+    <p>Telefone: <b>{{ getTelefone | mask: '(00) 00000-0000' }}</b></p>
+    <hr>
+    <div class="form-group">
+      <label for="valorPagamento">Valor do pagamento</label>
+      <input type="text" currencyMask
+             class="form-control"
+             id="valorPagamento"
+             name="valorPagamento"
+             placeholder="R$ 0,00"
+             [(ngModel)]="valorPagamento" required>
+    </div>
+    <div class="form-groupmt-2">
+      <label for="valorPagamento">Forma de pagamento</label>
+      <select name="formaPagamento"
+              id="formaPagamento"
+              class="form-control"
+              [(ngModel)]="formaPagamento" required>
+        <option value="PIX">PIX</option>
+        <option value="PIX">DINHEIRO</option>
+      </select>
+    </div>
+    <div class="form-group mt-2">
+      <label for="observacoes">Observações (opcional)</label>
+      <textarea class="form-control" name="observacoes" id="observacoes" rows="2"
+                [(ngModel)]="observacoesPagamento"></textarea>
+    </div>
+  </div>
+
+  <div class="modal-footer d-flex justify-content-between">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+      <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
+    </button>
+
+    <button type="submit" class="btn btn-success" [disabled]="!valorPagamento || !formaPagamento">
+      <fa-icon icon="check"></fa-icon>&nbsp;Confirmar o pagamento
+    </button>
+  </div>
+</form>

@@ -32,12 +32,11 @@ export class VendaUpdateComponent implements OnInit {
 
   editForm: VendaFormGroup = this.vendaFormService.createVendaFormGroup();
   produtoSelected: Produto | undefined;
-  filtroProdutos: string;
-  filtroProdutosSearch: string;
-  showProdutos: boolean;
-  showContas: boolean;
-  nomeProdutoSelecionado: string;
-  nomeContaSelecionada: any;
+  categoriaProdutoSelecionada: string;
+  contaSelecionada: IConta | undefined;
+  compareConta = (o1: IConta | null, o2: IConta | null): boolean => this.contaService.compareConta(o1, o2);
+  compareProduto = (o1: IProduto | null, o2: IProduto | null): boolean => this.produtoService.compareProduto(o1, o2);
+  categorias : string[] = [];
 
   constructor(
     protected vendaService: VendaService,
@@ -48,10 +47,6 @@ export class VendaUpdateComponent implements OnInit {
     protected vendaProdutoService: VendaProdutoService
   ) {
   }
-
-  compareConta = (o1: IConta | null, o2: IConta | null): boolean => this.contaService.compareConta(o1, o2);
-  compareProduto = (o1: IProduto | null, o2: IProduto | null): boolean => this.produtoService.compareProduto(o1, o2);
-  filterConta: string;
 
 
   ngOnInit(): void {
@@ -115,7 +110,7 @@ export class VendaUpdateComponent implements OnInit {
   protected updateForm(venda: IVenda): void {
     this.venda = venda;
     this.vendaFormService.resetForm(this.editForm, venda);
-    this.nomeContaSelecionada = this.getField('conta')?.value.nome
+    this.contaSelecionada = this.getField('conta')?.value.nome
   }
 
   protected loadRelationshipsOptions(): void {
@@ -129,6 +124,8 @@ export class VendaUpdateComponent implements OnInit {
       .query({sort: this.getSortQueryParam('categoria,nome'), size: 200})
       .pipe(map((res: HttpResponse<IProduto[]>) => res.body ?? []))
       .subscribe((produtos: IProduto[]) => (this.produtosSharedCollection = produtos));
+
+    this.produtoService.listAvailableCategories().subscribe(categorias => this.categorias = categorias.body ?? []);
   }
 
   protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
@@ -190,33 +187,25 @@ export class VendaUpdateComponent implements OnInit {
       .subscribe((vendaProdutos: VendaProduto[]) => this.vendaProdutos = vendaProdutos);
   }
 
-  filterProdutos() {
-    let result = this.produtosSharedCollection;
-    if (this.filtroProdutos) {
-      result = result.filter(p => p.categoria === this.filtroProdutos);
-    }
-    if (this.filtroProdutosSearch) {
-      result = result.filter(p => p.nome?.toLocaleLowerCase().includes(this.filtroProdutosSearch.toLocaleLowerCase()));
-    }
-    return result;
-  }
-
-  filterContas() {
-    if (!this.filterConta) return this.contasSharedCollection;
-    return this.contasSharedCollection.filter(p => p.nome?.toLocaleLowerCase().includes(this.filterConta.toLocaleLowerCase()));
+  get filterProdutos() {
+    return this.categoriaProdutoSelecionada ? this.produtosSharedCollection.filter(p => p.categoria === this.categoriaProdutoSelecionada) : this.produtosSharedCollection;
   }
 
   selectConta(conta) {
-    this.getField('conta')?.setValue(conta);
-    this.nomeContaSelecionada = conta.equipe + ' | ' + conta.nome;
-    this.showContas = false;
+    this.contaSelecionada = conta;
   }
 
   selectProduto(produto) {
     this.produtoSelected = produto;
     this.createNew();
-    this.nomeProdutoSelecionado = produto.categoria + ' | ' + produto.nome;
-    this.showProdutos = false;
-    this.nomeProdutoSelecionado = '';
+  }
+
+  clearContaSelecionada() {
+    this.getField('conta')?.setValue(undefined);
+    this.contaSelecionada = undefined;
+  }
+
+  get getContaTelefone() {
+    return this.contaSelecionada?.telefone || '';
   }
 }

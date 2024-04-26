@@ -1,14 +1,15 @@
 package app.minimercado.domain;
 
-import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * A Conta.
@@ -46,4 +47,10 @@ public class Conta implements Serializable {
     @Enumerated(EnumType.STRING)
     private StatusConta status;
 
+    @Transient
+    private BigDecimal saldo;
+
+    public BigDecimal getSaldoTotal() {
+        return saldo;
+    }
 }

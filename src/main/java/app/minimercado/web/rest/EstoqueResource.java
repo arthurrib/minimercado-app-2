@@ -64,7 +64,7 @@ public class EstoqueResource {
         Estoque result = estoqueService.save(estoque);
         return ResponseEntity
             .created(new URI("/api/estoques/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .headers(CustomHeaderUtil.entityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -98,7 +98,7 @@ public class EstoqueResource {
         Estoque result = estoqueService.update(estoque);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, estoque.getId().toString()))
+            .headers(CustomHeaderUtil.entityUpdateAlert(applicationName, false, ENTITY_NAME, estoque.getId().toString()))
             .body(result);
     }
 
@@ -134,7 +134,7 @@ public class EstoqueResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, estoque.getId().toString())
+            CustomHeaderUtil.entityUpdateAlert(applicationName, false, ENTITY_NAME, estoque.getId().toString())
         );
     }
 
@@ -177,7 +177,7 @@ public class EstoqueResource {
         estoqueService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .headers(CustomHeaderUtil.entityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
     }
 }

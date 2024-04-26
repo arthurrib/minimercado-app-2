@@ -5,6 +5,7 @@ import app.minimercado.domain.VendaComProdutos;
 import app.minimercado.repository.VendaProdutoRepository;
 import app.minimercado.repository.VendaRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -39,6 +41,7 @@ public class VendaService {
      * @param venda the entity to save.
      * @return the persisted entity.
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Venda save(Venda venda) {
         log.debug("Request to save Venda : {}", venda);
         return vendaRepository.save(venda);
@@ -99,6 +102,14 @@ public class VendaService {
         Page<Venda> vendas =  vendaRepository.findAllByConta_Id(idConta,pageable);
         List<VendaComProdutos> result = new ArrayList<>();
         vendas.getContent().forEach(v ->result.add(new VendaComProdutos(v, vendaProdutoRepository.findAllByVenda_Id(v.getId()))));
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    public List<VendaComProdutos> findAllByConta(Long idConta) {
+        List<Venda> vendas =  vendaRepository.findAllByConta_Id(idConta);
+        List<VendaComProdutos> result = new ArrayList<>();
+        vendas.forEach(v ->result.add(new VendaComProdutos(v, vendaProdutoRepository.findAllByVenda_Id(v.getId()))));
         return result;
     }
 

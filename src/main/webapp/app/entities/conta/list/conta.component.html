@@ -25,40 +25,16 @@
   <jhi-alert></jhi-alert>
 
   <div class="alert alert-warning" id="no-result" *ngIf="contas?.length === 0">
-    <span>No Contas found</span>
+    <span>Nenhuma conta foi criada</span>
   </div>
 
   <div class="table-responsive table-entities" id="entities" *ngIf="contas && contas.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
       <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
-        <th scope="col" jhiSortBy="id">
-          <div class="d-flex">
-            <span>ID</span>
-            <fa-icon class="p-1" icon="sort"></fa-icon>
-          </div>
-        </th>
         <th scope="col" jhiSortBy="nome">
           <div class="d-flex">
             <span>Nome</span>
-            <fa-icon class="p-1" icon="sort"></fa-icon>
-          </div>
-        </th>
-        <th scope="col" jhiSortBy="telefone">
-          <div class="d-flex">
-            <span>Telefone</span>
-            <fa-icon class="p-1" icon="sort"></fa-icon>
-          </div>
-        </th>
-        <th scope="col" jhiSortBy="equipe">
-          <div class="d-flex">
-            <span>Equipe</span>
-            <fa-icon class="p-1" icon="sort"></fa-icon>
-          </div>
-        </th>
-        <th scope="col" jhiSortBy="equipe">
-          <div class="d-flex">
-            <span>Saldo</span>
             <fa-icon class="p-1" icon="sort"></fa-icon>
           </div>
         </th>
@@ -68,52 +44,64 @@
             <fa-icon class="p-1" icon="sort"></fa-icon>
           </div>
         </th>
-        <th scope="col"></th>
+        <th scope="col" jhiSortBy="equipe">
+          <div class="d-flex">
+            <span>Saldo</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col text-right" style="max-width: 100px;"><fa-icon icon="phone"></fa-icon></th>
+        <th scope="col text-right" style="max-width: 100px;">
+<!--          <fa-icon icon="gear"></fa-icon>-->
+        </th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let conta of contas; trackBy: trackId" data-cy="entityTable">
         <td>
-          <a [routerLink]="['/conta', conta.id, 'view']">{{ conta.id }}</a>
+          <b>{{ conta.nome }}</b><br>
+          <small>Equipe: {{ conta.equipe }}</small><br>
+          <small>Telefone: {{ getTelefone(conta.telefone) | mask: '(00) 00000-0000' }}</small>
         </td>
-        <td>{{ conta.nome }}</td>
-        <td>{{ conta.telefone }}</td>
-        <td>{{ conta.equipe }}</td>
-        <td>{{ calcSaldo(conta) | currency: 'BRL' }}</td>
         <td>
           <ng-container *ngIf="(!conta.status) || conta.status === 'PENDENTE'; else pago">
-            <div class="badge badge-warning">PENDENTE</div>
+            <div class="badge badge-warning"><fa-icon icon="ban"></fa-icon>&nbsp;PENDENTE</div>
+            <br>
             <button class="btn btn-sm btn-info" (click)="informarPagamento(conta)">Informar Pagamento</button>
           </ng-container>
           <ng-template #pago>
-            <div class="badge badge-success">PAGO</div>
+            <div class="badge badge-success"><fa-icon icon="check"></fa-icon>&nbsp;PAGO</div>
           </ng-template>
         </td>
-<!--        <td>-->
-<!--          <button (click)="getWppLink(conta)" class="btn btn-primary btn-sm">-->
-<!--            Enviar Mensagem-->
-<!--          </button>-->
-<!--        </td>-->
+        <td>{{ conta.saldoTotal | currency: 'BRL' }}</td>
+        <td>
+          <button *ngIf="conta.status !== 'PAGO'" (click)="getWppLink(conta)" class="btn btn-primary btn-sm">
+            <fa-icon icon="phone"></fa-icon> Enviar Mensagem Whatsapp
+          </button>
+        </td>
         <td class="text-end">
-          <div class="btn-group">
-            <button type="submit" [routerLink]="['/conta', conta.id, 'view']" class="btn btn-info btn-sm"
-                    data-cy="entityDetailsButton">
-              <fa-icon icon="eye"></fa-icon>
-              <span class="d-none d-md-inline">Visualizar</span>
+          <div ngbDropdown class="btn-group">
+            <button class="btn btn-secondary btn-sm" id="dropdownBasic1" ngbDropdownToggle>
+              <span class="fa fa-gear"></span>
+              <span class="d-none d-md-inline"></span> Opções
             </button>
+            <div ngbDropdownMenu>
+              <button type="submit" [routerLink]="['/conta', conta.id, 'view']"
+                      class="btn btn-info btn-sm dropdown-item">
+                <fa-icon icon="eye"></fa-icon>&nbsp;Visualizar
+              </button>
 
-            <button type="submit" [routerLink]="['/conta', conta.id, 'edit']" class="btn btn-primary btn-sm"
-                    data-cy="entityEditButton">
-              <fa-icon icon="pencil-alt"></fa-icon>
-              <span class="d-none d-md-inline">Editar</span>
-            </button>
+              <button type="submit" [routerLink]="['/conta', conta.id, 'edit']"
+                      class="btn btn-primary btn-sm dropdown-item">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;Editar
+              </button>
 
-            <button type="submit" (click)="delete(conta)" class="btn btn-danger btn-sm"
-                    data-cy="entityDeleteButton"
-                    *jhiHasAnyAuthority="'ROLE_ADMIN'">
-              <fa-icon icon="times"></fa-icon>
-              <span class="d-none d-md-inline">Remover</span>
-            </button>
+              <button type="submit" (click)="delete(conta)"
+                      class="btn btn-danger btn-sm dropdown-item"
+                      *jhiHasAnyAuthority="'ROLE_ADMIN'">
+                <fa-icon icon="times"></fa-icon>&nbsp;Remover
+              </button>
+            </div>
           </div>
         </td>
       </tr>

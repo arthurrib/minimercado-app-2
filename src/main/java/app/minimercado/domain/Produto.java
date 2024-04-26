@@ -5,9 +5,7 @@ import java.math.BigDecimal;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -17,8 +15,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Table(name = "produto")
+@NoArgsConstructor
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Produto implements Serializable {
@@ -42,6 +40,10 @@ public class Produto implements Serializable {
     @Column(name = "categoria", nullable = false)
     @Enumerated(EnumType.STRING)
     private CategoriaProduto categoria;
+
+    public Produto(Long id) {
+        this.id = id;
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 

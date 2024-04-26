@@ -45,6 +45,14 @@ export class ProdutoService {
     return this.http.get<IProduto[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
+  listAvailableCategories(): Observable<HttpResponse<string[]>> {
+    return this.http.get<string[]>(`${this.resourceUrl}/list-categories`, { observe: 'response' });
+  }
+
+  listAllCategories(): Observable<HttpResponse<string[]>> {
+    return this.http.get<string[]>(`${this.resourceUrl}/list-all-categories`, { observe: 'response' });
+  }
+
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
