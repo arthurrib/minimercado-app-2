@@ -4,29 +4,26 @@
 
     <jhi-alert></jhi-alert>
   </div>
-  <div class="col-12 col-md-4">
+  <div class="col-12 d-flex align-items-center justify-content-center flex-column">
     <span class="hipster img-fluid rounded"></span>
-  </div>
-
-  <div class="col-12 col-md-8  d-flex align-items-center justify-content-center flex-column">
-    <h2 class="display-4">Minimercado - 55º Segue-me</h2>
+    <h2 class="display-4 mt-3">Renovendas 2024</h2>
     <button
       id="jh-create-entity"
       data-cy="entityCreateButton"
-      class="btn btn-primary jh-create-entity btn-block w-100 mt-2"
+      class="btn btn-primary jh-create-entity btn-block w-100 mt-2 p-3"
       [routerLink]="['/venda/new']"
     >
       <fa-icon icon="plus"></fa-icon>
-      <span> Nova Venda </span>
+      <span> Registrar Nova Venda </span>
     </button>
     <button
       id="jh-create-entity-conta"
       data-cy="entityCreateButtonConta"
-      class="btn btn-info jh-create-entity btn-block w-100 mt-2"
+      class="btn btn-info jh-create-entity btn-block w-100 mt-2 p-3"
       [routerLink]="['/conta']"
     >
       <fa-icon icon="user"></fa-icon>
-      <span> Contas </span>
+      <span> Todas as contas </span>
     </button>
   </div>
 </div>
