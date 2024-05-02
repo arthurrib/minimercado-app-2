@@ -10,11 +10,6 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./produto/produto.module').then(m => m.ProdutoModule),
       },
       {
-        path: 'controle-animacao',
-        data: { pageTitle: 'Controle Animação' },
-        loadChildren: () => import('./audio-animacao/audio-animacao.module').then(m => m.AudioAnimacaoModule),
-      },
-      {
         path: 'relatorio',
         data: { pageTitle: 'Relatório' },
         loadChildren: () => import('./relatorio/relatorio.module').then(m => m.RelatorioModule),

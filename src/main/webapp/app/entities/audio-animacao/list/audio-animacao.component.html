@@ -1,58 +1,216 @@
-<div>
-  <h2 id="page-heading" data-cy="ProdutoHeading">
-    <span>Audios da animação</span>
+<!--<div>-->
+<!--  <h2 id="page-heading" data-cy="ProdutoHeading">-->
+<!--    <span>Audios da animação</span>-->
 
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span>Refresh list</span>
-      </button>
+<!--    <div class="d-flex justify-content-end">-->
+<!--      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">-->
+<!--        <fa-icon icon="sync" [[spin]=true]="isLoading"></fa-icon>-->
+<!--        <span>Refresh list</span>-->
+<!--      </button>-->
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-audioAnimacao"
-        [routerLink]="['/controle-animacao/new']"
-      >
-        <fa-icon icon="plus"></fa-icon>
-        <span> Adicionar novo audio </span>
-      </button>
-    </div>
-  </h2>
-
-  <jhi-alert-error></jhi-alert-error>
-
-  <jhi-alert></jhi-alert>
-
-  <div class="alert alert-warning" id="no-result" *ngIf="audioAnimacaos?.length === 0">
-    <span>No Audios da animação found</span>
-  </div>
-
-  <div class="card" *ngFor="let audio of audioAnimacaos">
-    <div class="card-header">
-      <h6>Peça: {{audio.peca}}</h6>
-    </div>
-    <div class="card-body">
-      <p>Cena: {{audio.cena}}</p>
-
-    </div>
-  </div>
-
-<!--  <div *ngIf="audioAnimacaos && audioAnimacaos.length > 0">-->
-<!--    <div class="d-flex justify-content-center">-->
-<!--      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>-->
+<!--      <button-->
+<!--        id="jh-create-entity"-->
+<!--        data-cy="entityCreateButton"-->
+<!--        class="btn btn-primary jh-create-entity create-audioAnimacao"-->
+<!--        [routerLink]="['/controle-animacao/new']"-->
+<!--      >-->
+<!--        <fa-icon icon="plus"></fa-icon>-->
+<!--        <span> Adicionar novo audio </span>-->
+<!--      </button>-->
 <!--    </div>-->
+<!--  </h2>-->
 
-<!--    <div class="d-flex justify-content-center">-->
-<!--      <ngb-pagination-->
-<!--        [collectionSize]="totalItems"-->
-<!--        [page]="page"-->
-<!--        [pageSize]="itemsPerPage"-->
-<!--        [maxSize]="5"-->
-<!--        [rotate]="true"-->
-<!--        [boundaryLinks]="true"-->
-<!--        (pageChange)="navigateToPage($event)"-->
-<!--      ></ngb-pagination>-->
+<!--  <jhi-alert-error></jhi-alert-error>-->
+
+<!--  <jhi-alert></jhi-alert>-->
+
+<!--  <div class="alert alert-warning" id="no-result" *ngIf="audioAnimacaos?.length === 0">-->
+<!--    <span>No Audios da animação found</span>-->
+<!--  </div>-->
+
+<!--  <div class="card" *ngFor="let audio of audioAnimacaos">-->
+<!--    <div class="card-header">-->
+<!--      <h6>Peça: {{audio.peca}}</h6>-->
+<!--    </div>-->
+<!--    <div class="card-body">-->
+<!--      <p>Cena: {{audio.cena}}</p>-->
+
 <!--    </div>-->
 <!--  </div>-->
+
+<!--&lt;!&ndash;  <div *ngIf="audioAnimacaos && audioAnimacaos.length > 0">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="d-flex justify-content-center">&ndash;&gt;-->
+<!--&lt;!&ndash;      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <div class="d-flex justify-content-center">&ndash;&gt;-->
+<!--&lt;!&ndash;      <ngb-pagination&ndash;&gt;-->
+<!--&lt;!&ndash;        [collectionSize]="totalItems"&ndash;&gt;-->
+<!--&lt;!&ndash;        [page]="page"&ndash;&gt;-->
+<!--&lt;!&ndash;        [pageSize]="itemsPerPage"&ndash;&gt;-->
+<!--&lt;!&ndash;        [maxSize]="5"&ndash;&gt;-->
+<!--&lt;!&ndash;        [rotate]="true"&ndash;&gt;-->
+<!--&lt;!&ndash;        [boundaryLinks]="true"&ndash;&gt;-->
+<!--&lt;!&ndash;        (pageChange)="navigateToPage($event)"&ndash;&gt;-->
+<!--&lt;!&ndash;      ></ngb-pagination>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+<!--</div>-->
+
+<div class="row">
+  <div class="col-12 mb-3">
+    <h2>Controle de áudio RENOVEM 2024</h2>
+    <hr>
+  </div>
+  <h4><b>Peça CRACHÁ</b></h4>
+  <div class="row">
+    <div class="col-12 col-sm-4" *ngFor="let item of cracha">
+      <div class="card mt-3">
+        <div class="card-header">
+          <h4>{{ item.name }}</h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <p *ngIf="item.status ==='play'">
+                <fa-icon icon="sync" [spin]="true"></fa-icon>&nbsp; tocando...
+              </p>
+              <button class="btn btn-success"
+                      [disabled]="item.status === 'play'"
+                      (click)="item.audio.play(); item.status = 'play'">
+                <fa-icon icon="play"></fa-icon>&nbsp;Play
+              </button>
+              <button class="btn btn-success"
+                      [disabled]="item.status === 'pause' || item.status === 'stop'"
+                      (click)="item.audio.pause(); item.status = 'pause'">
+                <fa-icon icon="pause"></fa-icon>&nbsp;Pause
+              </button>
+              <button class="btn btn-danger"
+                      [disabled]="item.status === 'stop'"
+                      (click)="item.audio.load(); item.status = 'stop'">
+                <fa-icon icon="stop"></fa-icon>&nbsp;Stop
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5 mb-4">
+    <div class="col-12">
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <h4><b>Peça: LIFEHOUSE</b></h4>
+    <div class="col-12 col-sm-4">
+      <div class="card mt-3">
+        <div class="card-header">
+          <h4>{{ lifehouse.name }}</h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <p *ngIf="lifehouse.status ==='play'">
+                <fa-icon icon="sync" [spin]="true"></fa-icon>&nbsp; tocando...
+              </p>
+              <button class="btn btn-success"
+                      [disabled]="lifehouse.status === 'play'"
+                      (click)="lifehouse.audio.play(); lifehouse.status = 'play'">
+                <fa-icon icon="play"></fa-icon>&nbsp;Play
+              </button>
+              <button class="btn btn-success"
+                      [disabled]="lifehouse.status === 'pause' || lifehouse.status === 'stop'"
+                      (click)="lifehouse.audio.pause(); lifehouse.status = 'pause'">
+                <fa-icon icon="pause"></fa-icon>&nbsp;Pause
+              </button>
+              <button class="btn btn-danger"
+                      [disabled]="lifehouse.status === 'stop'"
+                      (click)="lifehouse.audio.load(); lifehouse.status = 'stop'">
+                <fa-icon icon="stop"></fa-icon>&nbsp;Stop
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5 mb-4">
+    <div class="col-12">
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <h4><b>Peça: CASTIDADE</b></h4>
+    <div class="col-12 col-sm-4" *ngFor="let item of castidade">
+      <div class="card mt-3">
+        <div class="card-header">
+          <h4>{{ item.name }}</h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <p *ngIf="item.status ==='play'">
+                <fa-icon icon="sync" [spin]="true"></fa-icon>&nbsp; tocando...
+              </p>
+              <button class="btn btn-success"
+                      [disabled]="item.status === 'play'"
+                      (click)="item.audio.play(); item.status = 'play'">
+                <fa-icon icon="play"></fa-icon>&nbsp;Play
+              </button>
+              <button class="btn btn-success"
+                      [disabled]="item.status === 'pause' || item.status === 'stop'"
+                      (click)="item.audio.pause(); item.status = 'pause'">
+                <fa-icon icon="pause"></fa-icon>&nbsp;Pause
+              </button>
+              <button class="btn btn-danger"
+                      [disabled]="item.status === 'stop'"
+                      (click)="item.audio.load(); item.status = 'stop'">
+                <fa-icon icon="stop"></fa-icon>&nbsp;Stop
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5 mb-4">
+    <div class="col-12">
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <h4><b>Peça: ALMOÇO</b></h4>
+    <div class="col-12 col-sm-4">
+      <div class="card mt-3">
+        <div class="card-header">
+          <h4>{{ almoco.name }}</h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <p *ngIf="almoco.status ==='play'">
+                <fa-icon icon="sync" [spin]="true"></fa-icon>&nbsp; tocando...
+              </p>
+              <button class="btn btn-success"
+                      [disabled]="almoco.status === 'play'"
+                      (click)="almoco.audio.play(); almoco.status = 'play'">
+                <fa-icon icon="play"></fa-icon>&nbsp;Play
+              </button>
+              <button class="btn btn-success"
+                      [disabled]="almoco.status === 'pause' || almoco.status === 'stop'"
+                      (click)="almoco.audio.pause(); almoco.status = 'pause'">
+                <fa-icon icon="pause"></fa-icon>&nbsp;Pause
+              </button>
+              <button class="btn btn-danger"
+                      [disabled]="almoco.status === 'stop'"
+                      (click)="almoco.audio.load(); almoco.status = 'stop'">
+                <fa-icon icon="stop"></fa-icon>&nbsp;Stop
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

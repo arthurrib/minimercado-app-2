@@ -32,6 +32,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           path: '',
           loadChildren: () => import(`./entities/entity-routing.module`).then(m => m.EntityRoutingModule),
         },
+        {
+          path: 'controle-animacao',
+          data: { pageTitle: 'Controle Animação' },
+          loadChildren: () => import('././entities/audio-animacao/audio-animacao.module').then(m => m.AudioAnimacaoModule),
+        },
         navbarRoute,
         ...errorRoute,
       ],
