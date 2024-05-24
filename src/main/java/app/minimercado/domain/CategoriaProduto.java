@@ -2,5 +2,5 @@ package app.minimercado.domain;
 
 public enum CategoriaProduto {
 
-    BEBIDA,COMIDA,CAFE,SALGADO,PIZZA,DOCE,AVE_MARIA,PAGAMENTO
+    BEBIDAS,LANCHES,DOCES,SEGUEME,AVE_MARIA,PAGAMENTO
 }

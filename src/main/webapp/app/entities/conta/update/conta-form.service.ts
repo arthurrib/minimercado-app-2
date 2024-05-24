@@ -50,7 +50,9 @@ export class ContaFormService {
       equipe: new FormControl(contaRawValue.equipe, {
         validators: [Validators.required],
       }),
-      status: new FormControl(contaRawValue.status),
+      status: new FormControl(contaRawValue.status, {
+        validators: [Validators.required],
+      }),
     });
   }
 
