@@ -144,7 +144,7 @@ export class ContaComponent implements OnInit {
   }
 
   getWppLink(conta) {
-    const url = `https%3A%2F%2Fapi.whatsapp.com%2Fsend%3Fphone%3D55%24%7Bconta.telefone%7D%26text%3DOpaa%2C+bom+dia%21+%0D%0APassando+pra+lembrar+que+voc%C3%AA+tem+uma+continha+aberta+no+minimercado%21%0D%0AVoc%C3%AA+pode+acessar+sua+fatura+no+link+abaixo%2C+fazer+o+pix+e+mandar+o+comprovante+pra+gente%21+Ou+ent%C3%A3o+passa+aqui+na+nossa+sala+se+tiver+qualquer+d%C3%BAvida.%0D%0APIX%3A+CPF+TODO%0D%0A%0D%0Alink+da+fatura%3A+%0D%0Ahttps%3A%2F%2Fpsocorrolagosul.app.br%2Faccount%2Fminha-conta%2F${conta.telefone}`;
+    const url = `https://api.whatsapp.com/send?phone=55${conta.telefone}&text=Opaa%2C+bom+dia%21+%0D%0APassando+pra+lembrar+que+voc%C3%AA+tem+uma+continha+aberta+no+minimercado%21%0D%0AVoc%C3%AA+pode+acessar+sua+fatura+no+link+abaixo%2C+fazer+o+PIX+e+mandar+o+comprovante+pra+gente%21+Ou+ent%C3%A3o+passa+aqui+na+nossa+sala+se+tiver+qualquer+d%C3%BAvida.%0D%0APIX%3A+EMAIL+seguemeicm%40gmail.com%0D%0ARafaela+Santos+Rios%0D%0A%0D%0Alink+da+fatura%3A+%0D%0Ahttps%3A%2F%2Fpsocorrolagosul.app.br%2Faccount%2Fminha-conta%2F${conta.telefone}`;
     //@ts-ignore
     window.open(url, '_blank').focus();
   }

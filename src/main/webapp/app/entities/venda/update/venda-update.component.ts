@@ -33,7 +33,7 @@ export class VendaUpdateComponent implements OnInit {
   editForm: VendaFormGroup = this.vendaFormService.createVendaFormGroup();
   produtoSelected: Produto | undefined;
   categoriaProdutoSelecionada: string;
-  contaSelecionada: IConta | undefined;
+  contaSelecionada: IConta | undefined | null ;
   compareConta = (o1: IConta | null, o2: IConta | null): boolean => this.contaService.compareConta(o1, o2);
   compareProduto = (o1: IProduto | null, o2: IProduto | null): boolean => this.produtoService.compareProduto(o1, o2);
   categorias : string[] = [];
@@ -121,7 +121,7 @@ export class VendaUpdateComponent implements OnInit {
       .subscribe((contas: IConta[]) => (this.contasSharedCollection = contas));
 
     this.produtoService
-      .query({sort: this.getSortQueryParam('categoria,nome'), size: 200})
+      .query({sort: this.getSortQueryParam('categoria,nome'), size: 999})
       .pipe(map((res: HttpResponse<IProduto[]>) => res.body ?? []))
       .subscribe((produtos: IProduto[]) => (this.produtosSharedCollection = produtos));
 
