@@ -25,9 +25,11 @@ export class ContaComponent implements OnInit {
 
   predicate = 'id';
   ascending = true;
-  itemsPerPage = 100;
+  itemsPerPage = 999;
   totalItems = 0;
   page = 1;
+  equipe: string | null = null;
+  situacao: string | null = null;
 
   constructor(
     protected contaService: ContaService,
@@ -118,6 +120,12 @@ export class ContaComponent implements OnInit {
       size: this.itemsPerPage,
       sort: this.getSortQueryParam(predicate, ascending),
     };
+    if (this.equipe) {
+      queryObject['equipe'] = this.equipe;
+    }
+    if (this.situacao) {
+      queryObject['situacao'] = this.situacao;
+    }
     return this.contaService.queryComSaldo(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
 
@@ -144,7 +152,10 @@ export class ContaComponent implements OnInit {
   }
 
   getWppLink(conta) {
-    const url = `https://api.whatsapp.com/send?phone=55${conta.telefone}&text=%F0%9F%9A%A8AL%C3%94%2C+BOM+DIA+IRM%C3%83O%F0%9F%9A%A8%0D%0A%0D%0AAqui+quem+fala+%C3%A9+o+SERASA.+Brincadeira%2C+%C3%A9+o+Mini-Mercado+do+XX+Segue-me+do+Park+Way.+Tudo+bem%3F%0D%0A%0D%0AAntes+de+apelarmos+pra+cobran%C3%A7a+via+agiotas%2C+estamos+aqui%2C+humildemente%2C+pedindo+pra+voc%C3%AA+P+A+G+A+R++O++M+I+N+I+-+M+E+R+A+C+A+D+O.%0D%0A%0D%0AC%C3%AA+pode+acessar+sua+fatura+no+link+abaixo+e+verificar+se+t%C3%A1+tudo+certinho%F0%9F%91%87%0D%0Ahttps%3A%2F%2Fpsocorrolagosul.app.br%2Faccount%2Fminha-conta%2F${conta.telefone}%0D%0A%0D%0A-+OBS%3A+caso+voc%C3%AA+j%C3%A1+tenha+adimplido+sua+d%C3%ADvida%2C+tenha+faltado+algum+item+ou+tenha+algo+acrescentado+a+mais%2C+fala+comigo%2C+MY+CONSAGRATED%2C+que+a+gente+se+acerta+%E2%98%BA%0D%0A%0D%0A%0D%0AO+PIX+%C3%A9+o+da+Tia+Rafa%2C+Dirigente+da+pasta+Finan%C3%A7as%2C+e+est%C3%A1+aqui+%F0%9F%91%87%0D%0Aseguemeicm%40gmail.com%0D%0A%0D%0ATenha+um+%C3%B3timo+dia%2C+beba+%C3%A1gua+e+PAGUE+O%C2%A0MINI-MERCADO%C2%A0%F0%9F%A4%97%0D%0A`;
+    // https://psocorrolagosul.app.br/account/minha-conta/AAAAAAAAAAAAA
+    // const url = `https://api.whatsapp.com/send?phone=55${conta.telefone}&text=%F0%9F%9A%A8AL%C3%94%2C+BOM+DIA+IRM%C3%83O%F0%9F%9A%A8%0D%0A%0D%0AAqui+quem+fala+%C3%A9+o+SERASA.+Brincadeira%2C+%C3%A9+o+Mini-Mercado+do+XX+Segue-me+do+Park+Way.+Tudo+bem%3F%0D%0A%0D%0AAntes+de+apelarmos+pra+cobran%C3%A7a+via+agiotas%2C+estamos+aqui%2C+humildemente%2C+pedindo+pra+voc%C3%AA+P+A+G+A+R++O++M+I+N+I+-+M+E+R+A+C+A+D+O.%0D%0A%0D%0AC%C3%AA+pode+acessar+sua+fatura+no+link+abaixo+e+verificar+se+t%C3%A1+tudo+certinho%F0%9F%91%87%0D%0Ahttps%3A%2F%2Fpsocorrolagosul.app.br%2Faccount%2Fminha-conta%2F${conta.telefone}%0D%0A%0D%0A-+OBS%3A+caso+voc%C3%AA+j%C3%A1+tenha+adimplido+sua+d%C3%ADvida%2C+tenha+faltado+algum+item+ou+tenha+algo+acrescentado+a+mais%2C+fala+comigo%2C+MY+CONSAGRATED%2C+que+a+gente+se+acerta+%E2%98%BA%0D%0A%0D%0A%0D%0AO+PIX+%C3%A9+o+da+Tia+Rafa%2C+Dirigente+da+pasta+Finan%C3%A7as%2C+e+est%C3%A1+aqui+%F0%9F%91%87%0D%0Aseguemeicm%40gmail.com%0D%0A%0D%0ATenha+um+%C3%B3timo+dia%2C+beba+%C3%A1gua+e+PAGUE+O%C2%A0MINI-MERCADO%C2%A0%F0%9F%A4%97%0D%0A`;
+    const text = `BOM+DIAAAA%21%21%21+%F0%9F%A5%B3%F0%9F%A5%B3%F0%9F%A5%B3%0D%0A%0D%0AParece+que+algu%C3%A9m+esqueceu+de+dar+um+%22al%C3%B4%22+para+o+Minimercado+e+acertar+as+contas%2C+hein%3F++Brincadeiras+a+parte%E2%80%A6tudo+bem%3F%3F%3F%0D%0A%0D%0AEstamos+aqui%2C+humildemente%2C+pedindo+pra+voc%C3%AA++pagar+o+minimercado%21%21%0D%0A%0D%0AVoc%C3%AA+pode+acessar+sua+fatura+no+link+abaixo+e+verificar+se+t%C3%A1+tudo+certinho%F0%9F%91%87%0D%0Ahttps%3A%2F%2Fpsocorrolagosul.app.br%2Faccount%2Fminha-conta%2F${conta.telefone}%0D%0A%0D%0A%2A+OBS%3A+caso+voc%C3%AA+j%C3%A1+tenha+quitado+a+sua+d%C3%ADvida%2C+tenha+faltado+algum+item+ou+tenha+algo+a+mais%2C+fala+com+a+gente%2C+que+a+gente+se+acerta+%E2%98%BA%0D%0A%0D%0A%0D%0AO+PIX+%C3%A9+da+Sofia+Gon%C3%A7alves+Moreira+Bernades%2C+integrante+da+equipe+do+minimercado%2C+e+est%C3%A1+aqui+%F0%9F%91%87%0D%0A%0D%0A61+992202223%0D%0A%0D%0ATenha+um+%C3%B3timo+dia%2C+beba+%C3%A1gua+e+pague+o+minimercado%C2%A0%F0%9F%A4%97%F0%9F%99%8F%F0%9F%8F%BB%0D%0A%0D%0APor+favor+nos+envie+o+comprovante+por+aqui%21+Se+n%C3%A3o%2C+n%C3%A3o+iremos+computar%C2%A0o%C2%A0pagamento%21%21`;
+    const url = `https://api.whatsapp.com/send?phone=55${conta.telefone}&text=${text}`;
     //@ts-ignore
     window.open(url, '_blank').focus();
   }

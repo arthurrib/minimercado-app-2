@@ -115,7 +115,7 @@ export class VendaUpdateComponent implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.contaService
-      .query({sort: this.getSortQueryParam(), size: 200})
+      .query({sort: this.getSortQueryParam(), size: 400})
       .pipe(map((res: HttpResponse<IConta[]>) => res.body ?? []))
       .pipe(map((contas: IConta[]) => this.vendaService.addVendaToCollectionIfMissing<IConta>(contas, this.venda?.conta)))
       .subscribe((contas: IConta[]) => (this.contasSharedCollection = contas));

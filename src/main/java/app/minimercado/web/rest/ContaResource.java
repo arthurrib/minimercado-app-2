@@ -198,9 +198,11 @@ public class ContaResource {
 
 
     @GetMapping("/contas/com-saldo")
-    public ResponseEntity<List<Conta>> getAllContasComSaldo(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<Conta>> getAllContasComSaldo(@org.springdoc.api.annotations.ParameterObject Pageable pageable,
+                                                            @RequestParam(value = "equipe", required = false) String equipe,
+                                                            @RequestParam(value = "situacao", required = false) String situacao) {
         log.debug("REST request to get a page of Contas");
-        Page<Conta> page = contaService.findAll(pageable);
+        Page<Conta> page = contaService.findAll(pageable, equipe, situacao);
         page.stream().forEach(conta -> {
             List<VendaProduto> vendas = vendaProdutoService.getAllVendasByConta(conta.getId());
             BigDecimal saldo = vendas.stream().map(VendaProduto::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add);

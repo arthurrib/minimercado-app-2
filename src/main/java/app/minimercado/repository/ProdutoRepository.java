@@ -1,8 +1,10 @@
 package app.minimercado.repository;
 
+import app.minimercado.domain.CategoriaProduto;
 import app.minimercado.domain.Produto;
 import app.minimercado.domain.Relatorio;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +22,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     @Query("select distinct p.categoria from Produto p order by p.categoria asc")
     List<String> listCategories();
+
+    Page<Produto> findAllByCategoria(CategoriaProduto categoria, Pageable pageable);
 }

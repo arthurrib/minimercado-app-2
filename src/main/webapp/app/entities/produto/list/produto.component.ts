@@ -25,6 +25,7 @@ export class ProdutoComponent implements OnInit {
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;
   page = 1;
+  categoria: string | null = null;
 
   constructor(
     protected produtoService: ProdutoService,
@@ -108,6 +109,9 @@ export class ProdutoComponent implements OnInit {
       size: this.itemsPerPage,
       sort: this.getSortQueryParam(predicate, ascending),
     };
+    if (this.categoria) {
+      queryObject['categoria'] = this.categoria;
+    }
     return this.produtoService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
 

@@ -1,9 +1,6 @@
 package app.minimercado.service;
 
-import app.minimercado.domain.Conta;
-import app.minimercado.domain.ContaComProdutosDTO;
-import app.minimercado.domain.VendaComProdutos;
-import app.minimercado.domain.VendaProduto;
+import app.minimercado.domain.*;
 import app.minimercado.repository.ContaRepository;
 
 import java.util.List;
@@ -102,6 +99,20 @@ public class ContaService {
     public Page<Conta> findAll(Pageable pageable) {
         log.debug("Request to get all Contas");
         return contaRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Conta> findAll(Pageable pageable, String equipe, String situacao) {
+        log.debug("Request to get all Contas");
+        if (equipe != null && situacao != null) {
+            return contaRepository.findAllByEquipeAndStatus(equipe, StatusConta.valueOf(situacao), pageable);
+        } else if (equipe != null) {
+            return contaRepository.findAllByEquipe(equipe, pageable);
+        } else if (situacao != null) {
+            return contaRepository.findAllByStatus(StatusConta.valueOf(situacao), pageable);
+        } else {
+            return contaRepository.findAll(pageable);
+        }
     }
 
     /**

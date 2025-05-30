@@ -1,5 +1,6 @@
 package app.minimercado.service;
 
+import app.minimercado.domain.CategoriaProduto;
 import app.minimercado.domain.Produto;
 import app.minimercado.domain.Relatorio;
 import app.minimercado.repository.ProdutoRepository;
@@ -91,6 +92,12 @@ public class ProdutoService {
     public Page<Produto> findAll(Pageable pageable) {
         log.debug("Request to get all Produtos");
         return produtoRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Produto> findByCategoria(CategoriaProduto categoria, Pageable pageable) {
+        log.debug("Request to get all Produtos");
+        return produtoRepository.findAllByCategoria(categoria, pageable);
     }
 
     /**

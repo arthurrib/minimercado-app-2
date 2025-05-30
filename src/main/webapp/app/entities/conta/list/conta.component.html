@@ -19,6 +19,44 @@
       </button>
     </div>
   </h2>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <label class="form-label">Equipe</label>
+      <select class="form-control" [(ngModel)]="equipe" (change)="load()">
+        <option [value]="null">TODOS</option>
+        <option value="Animação">Animação</option>
+        <option value="Canto">Canto</option>
+        <option value="Círculos">Círculos</option>
+        <option value="Comando Geral">Comando Geral</option>
+        <option value="Cozinha">Cozinha</option>
+        <option value="Equipe Dirigente">Equipe Dirigente</option>>
+        <option value="Espiritualização">Espiritualização</option>
+        <option value="Estacionamento">Estacionamento</option>
+        <option value="Faxina">Faxina</option>
+        <option value="Gráfica">Gráfica</option>
+        <option value="Lanche">Lanche</option>
+        <option value="Liturgia e Vigília">Liturgia e Vigília</option>
+        <option value="Minimercado">Minimercado</option>
+        <option value="Prover">Prover</option>
+        <option value="Sala">Sala</option>
+        <option value="Seguimista">Seguimista</option>
+        <option value="Vigília Paroquial">Vigília Paroquial</option>
+        <option value="Visitação">Visitação</option>
+      </select>
+    </div>
+
+    <div class="col-12 col-sm-4">
+      <label class="form-label">Situação</label>
+      <select class="form-control" [(ngModel)]="situacao" (change)="load()">
+        <option [value]="null">TODOS</option>
+        <option value="PENDENTE">PENDENTE</option>
+        <option value="PAGO">PAGO</option>
+      </select>
+    </div>
+    <div class="col-12">
+      <hr>
+    </div>
+  </div>
 
   <jhi-alert-error></jhi-alert-error>
 

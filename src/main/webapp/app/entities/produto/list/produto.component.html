@@ -19,6 +19,23 @@
       </button>
     </div>
   </h2>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <label class="form-label">Categoria</label>
+      <select class="form-control" [(ngModel)]="categoria" (change)="load()">
+        <option [value]="null">TODOS</option>
+        <option value="SALGADOS">SALGADOS</option>
+        <option value="DOCES">DOCES</option>
+        <option value="BEBIDAS_GELADAS">BEBIDAS_GELADAS</option>
+        <option value="BEBIDAS_QUENTES">BEBIDAS_QUENTES</option>
+        <option value="AVE_MARIA">AVE_MARIA</option>
+        <option value="SEGUEME">SEGUEME</option>
+      </select>
+    </div>
+    <div class="col-12">
+      <hr>
+    </div>
+  </div>
 
   <jhi-alert-error></jhi-alert-error>
 
@@ -31,54 +48,54 @@
   <div class="table-responsive table-entities" id="entities" *ngIf="produtos && produtos.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
-          <th scope="col" jhiSortBy="categoria">
-            <div class="d-flex">
-              <b>Categoria</b>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="nome">
-            <div class="d-flex">
-              <span>Nome</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="valor">
-            <div class="d-flex">
-              <span>Valor</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col"></th>
-        </tr>
+      <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+        <th scope="col" jhiSortBy="categoria">
+          <div class="d-flex">
+            <b>Categoria</b>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="nome">
+          <div class="d-flex">
+            <span>Nome</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col" jhiSortBy="valor">
+          <div class="d-flex">
+            <span>Valor</span>
+            <fa-icon class="p-1" icon="sort"></fa-icon>
+          </div>
+        </th>
+        <th scope="col"></th>
+      </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let produto of produtos; trackBy: trackId" data-cy="entityTable">
-          <td>{{ produto.categoria }}</td>
-          <td>{{ produto.nome }}</td>
-          <td>{{ produto.valor | currency: 'BRL'}}</td>
-          <td class="text-end">
-            <div class="btn-group">
-              <button
-                type="submit"
-                [routerLink]="['/produto', produto.id, 'edit']"
-                class="btn btn-primary btn-sm"
-                data-cy="entityEditButton"
-              >
-                <fa-icon icon="pencil-alt"></fa-icon>
-                <span class="d-none d-md-inline">Editar</span>
-              </button>
+      <tr *ngFor="let produto of produtos; trackBy: trackId" data-cy="entityTable">
+        <td>{{ produto.categoria }}</td>
+        <td>{{ produto.nome }}</td>
+        <td>{{ produto.valor | currency: 'BRL' }}</td>
+        <td class="text-end">
+          <div class="btn-group">
+            <button
+              type="submit"
+              [routerLink]="['/produto', produto.id, 'edit']"
+              class="btn btn-primary btn-sm"
+              data-cy="entityEditButton"
+            >
+              <fa-icon icon="pencil-alt"></fa-icon>
+              <span class="d-none d-md-inline">Editar</span>
+            </button>
 
-              <button type="submit" (click)="delete(produto)" class="btn btn-danger btn-sm"
-                      data-cy="entityDeleteButton"
-                      *jhiHasAnyAuthority="'ROLE_ADMIN'">
-                <fa-icon icon="times"></fa-icon>
-                <span class="d-none d-md-inline">Remover</span>
-              </button>
-            </div>
-          </td>
-        </tr>
+            <button type="submit" (click)="delete(produto)" class="btn btn-danger btn-sm"
+                    data-cy="entityDeleteButton"
+                    *jhiHasAnyAuthority="'ROLE_ADMIN'">
+              <fa-icon icon="times"></fa-icon>
+              <span class="d-none d-md-inline">Remover</span>
+            </button>
+          </div>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

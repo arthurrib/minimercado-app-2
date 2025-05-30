@@ -152,9 +152,14 @@ public class ProdutoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of produtos in body.
      */
     @GetMapping("/produtos")
-    public ResponseEntity<List<Produto>> getAllProdutos(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<Produto>> getAllProdutos(@org.springdoc.api.annotations.ParameterObject Pageable pageable, @RequestParam(value = "categoria", required = false) String categoria) {
         log.debug("REST request to get a page of Produtos");
-        Page<Produto> page = produtoService.findAll(pageable);
+        Page<Produto> page;
+        if (categoria == null) {
+         page = produtoService.findAll(pageable);
+        } else {
+            page = produtoService.findByCategoria(CategoriaProduto.valueOf(categoria), pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
