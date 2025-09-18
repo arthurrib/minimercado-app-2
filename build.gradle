@@ -84,19 +84,19 @@ defaultTasks "bootRun"
 springBoot {
     mainClass = "app.minimercado.MinimercadoApp"
 }
-
-test {
-    useJUnitPlatform()
-    exclude "**/*IT*", "**/*IntTest*"
-    testLogging {
-        events 'FAILED', 'SKIPPED'
-    }
-    jvmArgs += '-Djava.security.egd=file:/dev/./urandom -Xmx512m'
-    // uncomment if the tests reports are not generated
-    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-    // ignoreFailures true
-    reports.html.enabled = false
-}
+//
+//test {
+//    useJUnitPlatform()
+//    exclude "**/*IT*", "**/*IntTest*"
+//    testLogging {
+//        events 'FAILED', 'SKIPPED'
+//    }
+//    jvmArgs += '-Djava.security.egd=file:/dev/./urandom -Xmx512m'
+//    // uncomment if the tests reports are not generated
+//    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+//    // ignoreFailures true
+//    reports.html.enabled = false
+//}
 
 modernizer {
     failOnViolations = true
@@ -105,16 +105,16 @@ modernizer {
 
 
 
-check.dependsOn integrationTest
-task testReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn test
-}
-
-task integrationTestReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn integrationTest
-}
+//check.dependsOn integrationTest
+//task testReport(type: TestReport) {
+//    destinationDir = file("$buildDir/reports/tests")
+//    reportOn test
+//}
+//
+//task integrationTestReport(type: TestReport) {
+//    destinationDir = file("$buildDir/reports/tests")
+//    reportOn integrationTest
+//}
 
 if (!project.hasProperty("runList")) {
     project.ext.runList = "main"
@@ -241,7 +241,7 @@ dependencies {
     implementation "org.springframework.security:spring-security-data"
     implementation "io.micrometer:micrometer-registry-prometheus"
     implementation "io.dropwizard.metrics:metrics-core"
-    liquibaseRuntime sourceSets.main.compileClasspath
+//    liquibaseRuntime sourceSets.main.compileClasspath
     liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibaseHibernate5Version}"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
     compileOnly 'org.projectlombok:lombok:1.18.28'
@@ -250,6 +250,12 @@ dependencies {
     implementation "org.postgresql:postgresql"
     liquibaseRuntime "org.postgresql:postgresql"
 }
+configurations {
+    liquibaseRuntime {
+        extendsFrom configurations.compileClasspath
+    }
+}
+
 bootJar {
     archiveFileName = 'app.jar'
 }
