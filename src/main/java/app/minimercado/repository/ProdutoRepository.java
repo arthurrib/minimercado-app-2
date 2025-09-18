@@ -20,7 +20,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
         "LEFT JOIN venda_produto vp ON p.id = vp.id_produto group by p.nome", nativeQuery = true)
     List<Object[]> findRelatorio();
 
-    @Query("select distinct p.categoria from Produto p order by p.categoria asc")
+    @Query("select distinct p.categoria from Produto p where p.categoria <> 'PAGAMENTO' order by p.categoria asc")
     List<String> listCategories();
 
     Page<Produto> findAllByCategoria(CategoriaProduto categoria, Pageable pageable);

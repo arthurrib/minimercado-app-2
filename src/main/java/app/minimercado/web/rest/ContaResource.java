@@ -2,6 +2,7 @@ package app.minimercado.web.rest;
 
 import app.minimercado.domain.*;
 import app.minimercado.repository.ContaRepository;
+import app.minimercado.repository.ProdutoRepository;
 import app.minimercado.service.ContaService;
 import app.minimercado.service.VendaProdutoService;
 import app.minimercado.service.VendaService;
@@ -71,6 +72,7 @@ public class ContaResource {
         if (contaRepository.existsByTelefone(conta.getTelefone())) {
             throw new BadRequestAlertException("Ops! Já existe uma conta com este telefone.", ENTITY_NAME, "contaDuplicada");
         }
+        if (conta.getStatus() == null) conta.setStatus(StatusConta.PENDENTE);
         Conta result = contaService.save(conta);
         return ResponseEntity
             .created(new URI("/api/contas/" + result.getId()))
@@ -115,7 +117,6 @@ public class ContaResource {
                                              @Valid @RequestBody VendaPagamento vendaPagamento) {
         log.debug("REST request to update Conta : {}", idConta);
         Conta conta = contaService.findOne(idConta).orElseThrow(() -> new BadRequestAlertException("Conta não encontrada", "conta", "idnotfound"));
-
         Venda venda = new Venda();
         venda.setConta(conta);
         venda.setObservacoes(String.format("Pagamento via %s | %s", vendaPagamento.formaPagamento, vendaPagamento.observacoes));
@@ -124,14 +125,16 @@ public class ContaResource {
         VendaProduto vendaProduto = new VendaProduto();
         vendaProduto.setVenda(venda);
         vendaProduto.setQtd(1);
-        vendaProduto.setValorUnitario(vendaPagamento.valorPagamento.negate());
+        vendaProduto.setValorUnitario(vendaPagamento.valorPagamento.abs().negate());
         vendaProduto.setProduto(new Produto(1L));
         vendaProdutoService.save(vendaProduto);
         List<VendaProduto> vendas = vendaProdutoService.getAllVendasByConta(idConta);
         BigDecimal saldo = vendas.stream().map(VendaProduto::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
         conta.setSaldo(saldo);
-        if (conta.getSaldo().compareTo(BigDecimal.ZERO) == 0) {
+        if (conta.getSaldo().compareTo(BigDecimal.ZERO) <= 0) {
             conta.setStatus(StatusConta.PAGO);
+        } else {
+            conta.setStatus(StatusConta.PENDENTE);
         }
         conta = contaService.save(conta);
         return ResponseEntity
