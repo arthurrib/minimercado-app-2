@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Xmx256m -jar build/libs/*.jar --spring.profiles.active=prod,heroku
+web: bash -lc 'set -euo pipefail; JAR=$(ls build/libs/*-SNAPSHOT.jar 2>/dev/null || ls build/libs/*.jar); exec java -Dserver.port=$PORT $JAVA_OPTS -jar "$JAR" --spring.profiles.active=prod,heroku'
