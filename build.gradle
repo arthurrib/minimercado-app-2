@@ -250,6 +250,9 @@ dependencies {
     implementation "org.postgresql:postgresql"
     liquibaseRuntime "org.postgresql:postgresql"
 }
+bootJar {
+    archiveFileName = 'app.jar'
+}
 
 if (project.hasProperty("gae")) {
     task createPom {
